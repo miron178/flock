@@ -29,6 +29,7 @@ private:
 	static Scene* s_pSceneInstanc;
 
 	int RandomNumberBetweenRange(int iLowerRange, int iUpperRange);
+	float RandomFloatBetweenRange(float fLowerRange, float fUpperRange);
 	
 	GLFWwindow* window;
 	Camera* camera;

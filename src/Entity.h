@@ -11,13 +11,15 @@ class Entity
 {
 public:
 	Entity();
-	~Entity();
+	~Entity()= default;
 
 	virtual void Update(float a_fDeltaTime);
 	virtual void Draw(Shader* a_pShader);
 
 	void AddComponent(Component* a_pComponent);
 	Component* FindComponentOfType(COMPONENT_TYPE m_eComponentType) const;
+
+	static const std::map<const unsigned int, Entity*>& GetEntityMap() { return s_xEntityList; }
 
 private:
 	unsigned int m_uEntityID;

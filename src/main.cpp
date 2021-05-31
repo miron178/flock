@@ -8,8 +8,8 @@ int main()
 		bool bShouldQuit = pScene->Initialise();
 		if (bShouldQuit)
 		{
-			bool bKeepRunning = false;
-			while (!bKeepRunning)
+			bool bKeepRunning = true;
+			while (bKeepRunning)
 			{
 				bKeepRunning = pScene->Update();
 				pScene->Render();

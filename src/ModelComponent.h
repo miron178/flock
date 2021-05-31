@@ -14,7 +14,8 @@ public:
     virtual void Update(float a_fDeltaTime) {};
     virtual void Draw(Shader* a_pShader);
 
-    void SetModel(Model* pNewModel) { m_pModelData = pNewModel; }
+    void SetModel(Model* pNewModel) { m_pModelData  = pNewModel; }
+    void SetScale(float a_fNewScale){ m_fModelScale = a_fNewScale; }
 
 private:
     Model* m_pModelData;

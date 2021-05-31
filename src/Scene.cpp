@@ -17,6 +17,7 @@
 #include "Entity.h"
 #include "TransformComponent.h"
 #include "ModelComponent.h"
+#include "BrainComponent.h"
 
 //STD
 #include <iostream>
@@ -52,14 +53,12 @@ Scene::Scene()
 bool Scene::Initialise()
 {
     // glfw: initialize and configure
-    // ------------------------------
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // glfw window creation
-    // --------------------
     window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
@@ -76,7 +75,6 @@ bool Scene::Initialise()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
-    // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -84,42 +82,41 @@ bool Scene::Initialise()
     }
 
     // configure global opengl state
-    // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
     // build and compile shaders
-    // -------------------------
     ourShader = new Shader("shaders/model_loading.vs", "shaders/model_loading.fs");
 
     // load models
-    // -----------
     m_pNanosuitModel= new Model("models/nanosuit/nanosuit.obj");
 
     //camera
-    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    camera = new Camera(glm::vec3(0.0f, 2.0f, 8.0f));
 
     //seed randGen
     srand(static_cast<unsigned>(time(nullptr)));
 
     //create Entities
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < NUM_OF_BOIDS; ++i)
     {
         Entity* pEntity = new Entity();
 
         //transform Component
         TransformComponent* pTransformComponent = new TransformComponent(pEntity);
-        pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3( RandomNumberBetweenRange(0, 1), 
-                                                                            RandomNumberBetweenRange(0, 1),
-                                                                            RandomNumberBetweenRange(0, 1) ) );
+        pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3( RandomFloatBetweenRange(0, 5),
+                                                                            0.0f,
+                                                                            RandomFloatBetweenRange(0, 5) ) );
         pEntity->AddComponent(pTransformComponent);
 
         //model component
         ModelComponent* pModelComponent = new ModelComponent(pEntity);
         pModelComponent->SetModel(m_pNanosuitModel);
+        pModelComponent->SetScale(0.02f);
         pEntity->AddComponent(pModelComponent);
 
         //brain component
-        //TODO
+        BrainComponent* pBrainComponent = new BrainComponent(pEntity);
+        pEntity->AddComponent(pBrainComponent);
     }
 
     return true;
@@ -128,23 +125,32 @@ bool Scene::Initialise()
 bool Scene::Update()
 {
     // per-frame time logic
-       // --------------------
     float currentFrame = static_cast<float>(glfwGetTime());
     fDeltaTime = currentFrame - fLastFrame;
     fLastFrame = currentFrame;
 
     // input
-    // -----
     camera->processInput(window, fDeltaTime);
 
+    //update entities
+    std::map<const unsigned int, Entity*>::const_iterator xIter;
+    for (xIter = Entity::GetEntityMap().begin(); xIter != Entity::GetEntityMap().end(); ++xIter)
+    {
+        Entity* pEntity = xIter->second;
+        if (pEntity)
+        {
+            pEntity->Update(fDeltaTime);
+        }
+    }
+
+    //return close or not
 	return !glfwWindowShouldClose(window);
 }
 
 void Scene::Render()
 {
     // render
-        // ------
-    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // don't forget to enable shader before setting uniforms
@@ -156,16 +162,18 @@ void Scene::Render()
     ourShader->setMat4("projection", projection);
     ourShader->setMat4("view", view);
 
-    // render the loaded model
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-    model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
-    ourShader->setMat4("model", model);
-    m_pNanosuitModel->Draw(*ourShader);
-
+    //render entities
+    std::map<const unsigned int, Entity*>::const_iterator xIter;
+    for (xIter = Entity::GetEntityMap().begin(); xIter != Entity::GetEntityMap().end(); ++xIter)
+    {
+        Entity* pEntity = xIter->second;
+        if (pEntity)
+        {
+            pEntity->Draw(ourShader);
+        }
+    }
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-    // -------------------------------------------------------------------------------
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
@@ -176,13 +184,18 @@ void Scene::Deinitialise()
     delete ourShader;
     delete m_pNanosuitModel;
 
+    std::map<const unsigned int, Entity*>::const_iterator xIter;
+    for (xIter = Entity::GetEntityMap().begin(); xIter != Entity::GetEntityMap().end(); ++xIter)
+    {
+        Entity* pEntity = xIter->second;
+        delete pEntity;
+    }
+
     // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     glfwTerminate();
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
 void Scene::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     // make sure the viewport matches the new window dimensions; note that width and 
@@ -191,7 +204,6 @@ void Scene::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 // glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
 void Scene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
     Scene* pScene = Scene::GetInstance();
@@ -219,7 +231,6 @@ void Scene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
 void Scene::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     Scene* pScene = Scene::GetInstance();
@@ -233,4 +244,9 @@ void Scene::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 int Scene::RandomNumberBetweenRange(int iLowerRange, int iUpperRange)
 {
     return rand() % (glm::abs(iLowerRange - iUpperRange)) + (iLowerRange);
+}
+
+float Scene::RandomFloatBetweenRange(float fLowerRange, float fUpperRange)
+{
+    return fLowerRange + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (fUpperRange - fLowerRange)));
 }

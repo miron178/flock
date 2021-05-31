@@ -7,7 +7,7 @@ std::map<const unsigned int, Entity*> Entity::s_xEntityList;
 
 Entity::Entity()
 {
-	m_uEntityID = s_uEntityCount;
+	m_uEntityID = s_uEntityCount++;
 
 	s_xEntityList.insert(EntityPair(m_uEntityID, this));
 }
