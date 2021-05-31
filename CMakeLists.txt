@@ -54,8 +54,18 @@ target_include_directories(learnopengl INTERFACE deps)
 
 #Main executable
 add_executable(Flock
-
+	src/Component.cpp
+	src/Component.h
+	src/Entity.cpp
+	src/Entity.h
 	src/main.cpp
+	src/ModelComponent.cpp
+	src/ModelComponent.h
+	src/Scene.cpp
+	src/Scene.h
+	src/TransformComponent.cpp
+	src/TransformComponent.h
+
 )
 
 target_include_directories(Flock PUBLIC

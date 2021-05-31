@@ -113,6 +113,23 @@ public:
             Zoom = 45.0f;
     }
 
+    // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+    // ---------------------------------------------------------------------------------------------------------
+    void processInput(GLFWwindow* window, float fDeltaTime)
+    {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            ProcessKeyboard(FORWARD, fDeltaTime);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            ProcessKeyboard(BACKWARD, fDeltaTime);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            ProcessKeyboard(LEFT, fDeltaTime);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            ProcessKeyboard(RIGHT, fDeltaTime);
+    }
+
 private:
     // Calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()
@@ -129,4 +146,3 @@ private:
     }
 };
 #endif
-
