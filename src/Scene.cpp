@@ -26,7 +26,7 @@
 // settings
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 800;
-const unsigned int NUM_OF_BOIDS = 5;
+const unsigned int NUM_OF_BOIDS = 200;
 
 Scene* Scene::s_pSceneInstanc = nullptr;
 

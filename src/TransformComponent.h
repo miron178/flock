@@ -24,7 +24,7 @@ public:
 	const glm::mat4& GetEntityMatrix() { return m_m4EntityMatrix; }
 
 	void SetEntityMatrixRow(MATRIX_ROW a_eRow, glm::vec3 a_v3Vec);
-	glm::vec3 GetEntityMatrixRow(MATRIX_ROW a_eRow);
+	glm::vec3 GetEntityMatrixRow(MATRIX_ROW a_eRow) const;
 
 private:
 	glm::mat4 m_m4EntityMatrix;

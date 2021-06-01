@@ -20,6 +20,7 @@ public:
 	Component* FindComponentOfType(COMPONENT_TYPE m_eComponentType) const;
 
 	static const std::map<const unsigned int, Entity*>& GetEntityMap() { return s_xEntityList; }
+	unsigned int GetEntityID() const { return m_uEntityID; }
 
 private:
 	unsigned int m_uEntityID;
