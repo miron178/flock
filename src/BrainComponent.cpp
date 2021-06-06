@@ -45,18 +45,18 @@ void BrainComponent::Update(float a_fDeltaTime)
 
 	//seek
 	//glm::vec3 v3SeekForce = CalculateSeekForce(glm::vec3(4.0f, 0.0f, 4.0f), v3CurrentPos);
-	//glm::vec3 v3SeekForce = m_seek.Force();
+	glm::vec3 v3SeekForce = m_seek.Force();
 	
 	//flee
 	//glm::vec3 v3FleeForce = CalculateFleeForce(glm::vec3(0.0f, 0.0f, 0.0f), v3CurrentPos);
-	//glm::vec3 v3FleeForce = m_flee.Force();
+	glm::vec3 v3FleeForce = m_flee.Force();
 
 	//wander
 	//glm::vec3 v3WanderForce = CalculateWanderForce(v3Forward, v3CurrentPos);
 	glm::vec3 v3WanderForce = m_wander.Force();
 
 	//v3FinalForce = v3SeporationForce * 3 + v3CohisionForce * 1 + v3AlignmentForce;
-	v3FinalForce = v3WanderForce;
+	v3FinalForce = v3SeekForce;
 
 	//velocity
 	m_v3CurrentVelocity += v3FinalForce;

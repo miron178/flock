@@ -6,12 +6,12 @@ Seek::Seek(const TransformComponent* pAgent, const glm::vec3* pTarget, const glm
 
 glm::vec3 Seek::Force()
 {
-	glm::vec3 v3Force(0, 0, 0);
 	glm::vec3 v3TargetDir(TargetPos() - AgentPos());
-	if (glm::length2(v3TargetDir) > 0)
+	if (glm::length2(v3TargetDir) == 0)
 	{
-		glm::vec3 v3DesiredVelocity = ClampVelocity(glm::normalize(v3TargetDir) * m_fSpeed);
-		v3Force = ClampForce(v3DesiredVelocity - *m_pv3Velocity);
+		return glm::vec3(0, 0, 0); //already there
 	}
-	return v3Force;
+	v3TargetDir = glm::normalize(v3TargetDir);
+	glm::vec3 v3DesiredVelocity = ClampVelocity(v3TargetDir * m_fSpeed);
+	return ClampForce(v3DesiredVelocity - *m_pv3Velocity);
 }

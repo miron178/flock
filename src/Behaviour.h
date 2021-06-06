@@ -20,6 +20,8 @@ protected:
 	glm::vec3 ClampVelocity(const glm::vec3& v3Velocity) const { return Clamp(v3Velocity, m_fMaxSpeed); }
 	glm::vec3 ClampForce(const glm::vec3& v3Force) const { return Clamp(v3Force, m_fMaxForce); }
 
+	glm::vec3 SphericalRand(float fRadius);
+
 protected:
 	const TransformComponent* m_pAgent;
 	const glm::vec3* m_pTarget;
