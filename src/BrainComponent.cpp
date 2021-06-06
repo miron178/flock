@@ -48,15 +48,12 @@ void BrainComponent::Update(float a_fDeltaTime)
 	glm::vec3 v3ArriveForce = m_arrive.Force();
 
 	//seek
-	//glm::vec3 v3SeekForce = CalculateSeekForce(glm::vec3(4.0f, 0.0f, 4.0f), v3CurrentPos);
 	glm::vec3 v3SeekForce = m_seek.Force();
 	
 	//flee
-	//glm::vec3 v3FleeForce = CalculateFleeForce(glm::vec3(0.0f, 0.0f, 0.0f), v3CurrentPos);
 	glm::vec3 v3FleeForce = m_flee.Force();
 
 	//wander
-	//glm::vec3 v3WanderForce = CalculateWanderForce(v3Forward, v3CurrentPos);
 	glm::vec3 v3WanderForce = m_wander.Force();
 
 	//v3FinalForce = v3SeporationForce * 3 + v3CohisionForce * 1 + v3AlignmentForce;
@@ -80,60 +77,6 @@ void BrainComponent::Update(float a_fDeltaTime)
 		pTransComp->SetEntityMatrixRow(FORWARD_VECTOR, v3Forward);
 	}
 	pTransComp->SetEntityMatrixRow(POSITION_VECTOR, v3CurrentPos);
-}
-
-#if 1
-glm::vec3 BrainComponent::CalculateSeekForce(const glm::vec3& v3Target, const glm::vec3& v3CurrentPos) const
-{
-	//target dir
-	glm::vec3 v3TargetDir(v3Target - v3CurrentPos);
-	if (glm::length(v3TargetDir) > 0.0f)
-	{
-		v3TargetDir = glm::normalize(v3TargetDir);
-	}
-
-	//new velocity
-	glm::vec3 v3NewVelocity = v3TargetDir * fSPEED;
-
-	return (v3NewVelocity - m_v3CurrentVelocity);
-}
-
-glm::vec3 BrainComponent::CalculateFleeForce(const glm::vec3& v3Target, const glm::vec3& v3CurrentPos) const
-{
-	//target dir
-	glm::vec3 v3TargetDir(v3CurrentPos - v3Target);
-	if (glm::length(v3TargetDir) > 0.0f)
-	{
-		v3TargetDir = glm::normalize(v3TargetDir);
-	}
-
-	//new velocity
-	glm::vec3 v3NewVelocity = v3TargetDir * fSPEED;
-
-	return (v3NewVelocity - m_v3CurrentVelocity);
-}
-
-glm::vec3 BrainComponent::CalculateWanderForce(const glm::vec3& v3Forward, const glm::vec3& v3CurrentPos)
-{
-	//project point for sphere
-	glm::vec3 v3SphereOrigin = v3CurrentPos + (v3Forward * fCIRCLE_FORWARD_MULTIPLIER);
-
-	//point on sphere
-	if (glm::length(m_v3WanderPoint) == 0.0f)
-	{
-		glm::vec3 v3RandomPointOnSphere = glm::sphericalRand(fWANDER_RADIUS);
-		m_v3WanderPoint = v3SphereOrigin + v3RandomPointOnSphere;
-	}
-
-	//calculate dir
-	glm::vec3 v3DirectionToTarget = glm::normalize(m_v3WanderPoint - v3SphereOrigin) * fWANDER_RADIUS;
-
-	//final point
-	m_v3WanderPoint = v3SphereOrigin + v3DirectionToTarget;
-
-	m_v3WanderPoint += glm::sphericalRand(fJITTER);
-
-	return CalculateSeekForce(m_v3WanderPoint, v3CurrentPos);
 }
 
 glm::vec3 BrainComponent::CalculateSeporationForce()
@@ -275,4 +218,3 @@ glm::vec3 BrainComponent::CalculateCohesionForce()
 
 	return v3CohesionVelocity;
 }
-#endif

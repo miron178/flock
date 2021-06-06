@@ -23,11 +23,6 @@ public:
 
 private:
 #if 1
-    //steer
-    glm::vec3 CalculateSeekForce  (const glm::vec3& v3Target,  const glm::vec3& v3CurrentPos) const;
-    glm::vec3 CalculateFleeForce  (const glm::vec3& v3Target,  const glm::vec3& v3CurrentPos) const;
-    glm::vec3 CalculateWanderForce(const glm::vec3& v3Forward, const glm::vec3& v3CurrentPos);
-
     //flock
     glm::vec3 CalculateSeporationForce();
     glm::vec3 CalculateAlignmentForce();
