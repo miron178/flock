@@ -15,8 +15,9 @@ BrainComponent::BrainComponent(Entity* a_pOwner)
 	, m_v3CurrentVelocity(0.0f)
 	, m_v3WanderPoint(0.0f)
 	, m_v3Target(4.0f, 0.0f, 4.0f)
-	, m_seek(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
+	, m_arrive(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
 	, m_flee(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
+	, m_seek(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
 	, m_wander(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3CurrentVelocity)
 {
 	m_eComponentType = BRAIN;
@@ -43,6 +44,9 @@ void BrainComponent::Update(float a_fDeltaTime)
 	//glm::vec3 v3AlignmentForce = CalculateAlignmentForce();
 	//glm::vec3 v3CohisionForce = CalculateCohesionForce();
 
+	//Arrive
+	glm::vec3 v3ArriveForce = m_arrive.Force();
+
 	//seek
 	//glm::vec3 v3SeekForce = CalculateSeekForce(glm::vec3(4.0f, 0.0f, 4.0f), v3CurrentPos);
 	glm::vec3 v3SeekForce = m_seek.Force();
@@ -56,7 +60,7 @@ void BrainComponent::Update(float a_fDeltaTime)
 	glm::vec3 v3WanderForce = m_wander.Force();
 
 	//v3FinalForce = v3SeporationForce * 3 + v3CohisionForce * 1 + v3AlignmentForce;
-	v3FinalForce = v3SeekForce;
+	v3FinalForce = v3ArriveForce;
 
 	//velocity
 	m_v3CurrentVelocity += v3FinalForce / m_fMass;

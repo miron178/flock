@@ -59,6 +59,8 @@ target_include_directories(learnopengl INTERFACE deps)
 
 #Main executable
 add_executable(Flock
+	src/Arrive.cpp
+	src/Arrive.h
 	src/Behaviour.cpp
 	src/Behaviour.h
 	src/BrainComponent.cpp

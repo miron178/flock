@@ -5,6 +5,7 @@
 #include "Seek.h"
 #include "Flee.h"
 #include "Wander.h"
+#include "Arrive.h"
 
 #include <glm/glm.hpp>
 
@@ -39,8 +40,10 @@ private:
     glm::vec3 m_v3WanderPoint;
 
     glm::vec3 m_v3Target;
-    Seek m_seek;
+
+    Arrive m_arrive;
     Flee m_flee;
+    Seek m_seek;
     Wander m_wander;
 };
 
