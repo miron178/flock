@@ -14,6 +14,10 @@ BrainComponent::BrainComponent(Entity* a_pOwner)
 	: Component(a_pOwner)
 	, m_v3CurrentVelocity(0.0f)
 	, m_v3WanderPoint(0.0f)
+	, m_v3Target(4.0f, 0.0f, 4.0f)
+	, m_seek(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
+	, m_flee(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
+	, m_wander(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3CurrentVelocity)
 {
 	m_eComponentType = BRAIN;
 }
@@ -35,20 +39,24 @@ void BrainComponent::Update(float a_fDeltaTime)
 	//calculate forces
 	glm::vec3 v3FinalForce(0.0f);
 
-	glm::vec3 v3SeporationForce = CalculateSeporationForce();
-	glm::vec3 v3AlignmentForce = CalculateAlignmentForce();
-	glm::vec3 v3CohisionForce = CalculateCohesionForce();
+	//glm::vec3 v3SeporationForce = CalculateSeporationForce();
+	//glm::vec3 v3AlignmentForce = CalculateAlignmentForce();
+	//glm::vec3 v3CohisionForce = CalculateCohesionForce();
 
 	//seek
-	glm::vec3 v3SeekForce = CalculateSeekForce(glm::vec3(4.0f, 0.0f, 4.0f), v3CurrentPos);
+	//glm::vec3 v3SeekForce = CalculateSeekForce(glm::vec3(4.0f, 0.0f, 4.0f), v3CurrentPos);
+	//glm::vec3 v3SeekForce = m_seek.Force();
 	
 	//flee
-	glm::vec3 v3FleeForce = CalculateFleeForce(glm::vec3(0.0f, 0.0f, 0.0f), v3CurrentPos);
+	//glm::vec3 v3FleeForce = CalculateFleeForce(glm::vec3(0.0f, 0.0f, 0.0f), v3CurrentPos);
+	//glm::vec3 v3FleeForce = m_flee.Force();
 
 	//wander
-	glm::vec3 v3WanderForce = CalculateWanderForce(v3Forward, v3CurrentPos);
+	//glm::vec3 v3WanderForce = CalculateWanderForce(v3Forward, v3CurrentPos);
+	glm::vec3 v3WanderForce = m_wander.Force();
 
-	v3FinalForce = v3WanderForce + v3SeporationForce;
+	//v3FinalForce = v3SeporationForce * 3 + v3CohisionForce * 1 + v3AlignmentForce;
+	v3FinalForce = v3WanderForce;
 
 	//velocity
 	m_v3CurrentVelocity += v3FinalForce;
@@ -70,6 +78,7 @@ void BrainComponent::Update(float a_fDeltaTime)
 	pTransComp->SetEntityMatrixRow(POSITION_VECTOR, v3CurrentPos);
 }
 
+#if 1
 glm::vec3 BrainComponent::CalculateSeekForce(const glm::vec3& v3Target, const glm::vec3& v3CurrentPos) const
 {
 	//target dir
@@ -154,16 +163,16 @@ glm::vec3 BrainComponent::CalculateSeporationForce()
 			//neighbourhood distance
 			if(fDistanceBetween < fNEIGHBOURHOOD_RADIUS)
 			{
-				v3SeporationVelocity += (v3LocalPos - v3TargetPos);
+				float fStrength = 1 - fDistanceBetween / fNEIGHBOURHOOD_RADIUS;
+				v3SeporationVelocity += glm::normalize(v3LocalPos - v3TargetPos) * fStrength;
 				uNeighbourCount++;
 			}
 		}
 	}
 
-	if (glm::length(v3SeporationVelocity) > 0.0f && uNeighbourCount)
+	if (uNeighbourCount)
 	{
 		v3SeporationVelocity /= uNeighbourCount;
-		v3SeporationVelocity = glm::normalize(v3SeporationVelocity);
 	}
 
 	return v3SeporationVelocity;
@@ -201,16 +210,16 @@ glm::vec3 BrainComponent::CalculateAlignmentForce()
 			//neighbourhood distance
 			if (fDistanceBetween < fNEIGHBOURHOOD_RADIUS)
 			{
-				v3AlignmentVelocity += pTargetBrain->GetCurrentVelocity();
+				float fStrength = 1 - fDistanceBetween / fNEIGHBOURHOOD_RADIUS;
+				v3AlignmentVelocity += pTargetBrain->GetCurrentVelocity() * fStrength;
 				uNeighbourCount++;
 			}
 		}
 	}
 
-	if (glm::length(v3AlignmentVelocity) > 0.0f && uNeighbourCount)
+	if (uNeighbourCount)
 	{
-	v3AlignmentVelocity /= uNeighbourCount;
-	v3AlignmentVelocity = glm::normalize(v3AlignmentVelocity);
+		v3AlignmentVelocity /= uNeighbourCount;
 	}
 
 	return v3AlignmentVelocity;
@@ -247,7 +256,8 @@ glm::vec3 BrainComponent::CalculateCohesionForce()
 			//neighbourhood distance
 			if (fDistanceBetween < fNEIGHBOURHOOD_RADIUS)
 			{
-				v3CohesionVelocity += v3TargetPos;
+				float fStrength = 1 - fDistanceBetween / fNEIGHBOURHOOD_RADIUS;
+				v3CohesionVelocity += v3TargetPos * fStrength;
 				uNeighbourCount++;
 			}
 		}
@@ -261,3 +271,4 @@ glm::vec3 BrainComponent::CalculateCohesionForce()
 
 	return v3CohesionVelocity;
 }
+#endif

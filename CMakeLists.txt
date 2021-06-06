@@ -6,6 +6,11 @@ project(Flock VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+if (MSVC)
+    # multi-process build
+    add_compile_options(/MP)
+endif()
+
 #Disable shared libs (assimp and glfw)
 SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs")
 
@@ -54,21 +59,38 @@ target_include_directories(learnopengl INTERFACE deps)
 
 #Main executable
 add_executable(Flock
+	src/Behaviour.cpp
+	src/Behaviour.h
 	src/BrainComponent.cpp
 	src/BrainComponent.h
 	src/Component.cpp
 	src/Component.h
 	src/Entity.cpp
 	src/Entity.h
+	src/Flee.cpp
+	src/Flee.h
 	src/main.cpp
 	src/ModelComponent.cpp
 	src/ModelComponent.h
 	src/Scene.cpp
 	src/Scene.h
+	src/Seek.cpp
+	src/Seek.h
 	src/TransformComponent.cpp
 	src/TransformComponent.h
-
+	src/Wander.cpp
+	src/Wander.h
 )
+
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    #target_compile_options(Flock PRIVATE /W4 /WX)
+    target_compile_options(Flock PRIVATE /W3)
+else()
+    # lots of warnings and all warnings as errors
+    #target_compile_options(Flock PRIVATE -Wall -Wextra -pedantic -Werror)
+    target_compile_options(Flock PRIVATE -Wall -Wextra -pedantic)
+endif()
 
 target_include_directories(Flock PUBLIC
 	deps/glad/include
