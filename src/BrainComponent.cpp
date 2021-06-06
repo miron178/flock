@@ -59,7 +59,7 @@ void BrainComponent::Update(float a_fDeltaTime)
 	v3FinalForce = v3SeekForce;
 
 	//velocity
-	m_v3CurrentVelocity += v3FinalForce;
+	m_v3CurrentVelocity += v3FinalForce / m_fMass;
 	m_v3CurrentVelocity = glm::clamp(m_v3CurrentVelocity, glm::vec3(-10.0f, 0.0f, -10.0f), glm::vec3(10.0f, 0.0f, 10.0f));
 	v3CurrentPos += m_v3CurrentVelocity * a_fDeltaTime;
 

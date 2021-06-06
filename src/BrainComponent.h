@@ -34,6 +34,7 @@ private:
 #endif
 
     //Variable
+    float m_fMass = 1;
     glm::vec3 m_v3CurrentVelocity;
     glm::vec3 m_v3WanderPoint;
 
