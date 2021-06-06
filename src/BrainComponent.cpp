@@ -60,7 +60,7 @@ void BrainComponent::Update(float a_fDeltaTime)
 	glm::vec3 v3WanderForce = m_wander.Force();
 
 	//v3FinalForce = v3SeporationForce * 3 + v3CohisionForce * 1 + v3AlignmentForce;
-	v3FinalForce = v3ArriveForce;
+	v3FinalForce = v3SeekForce;
 
 	//velocity
 	m_v3CurrentVelocity += v3FinalForce / m_fMass;

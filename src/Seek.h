@@ -1,14 +1,13 @@
 #ifndef SEEK_H
 #define SEEK_H
 
-#include "Behaviour.h"
+#include "Arrive.h"
 
-class Seek : public Behaviour
+class Seek : public Arrive
 {
 public:
     Seek(const TransformComponent* pAgent, const glm::vec3* pTarget, const glm::vec3* pv3Velocity);
     virtual ~Seek() = default;
-    virtual glm::vec3 Force() override;
 };
 
 #endif //SEEK_H
