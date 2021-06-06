@@ -2,6 +2,10 @@
 
 #include "Entity.h"
 #include "TransformComponent.h"
+#include "Seek.h"
+#include "Wander.h"
+
+#include <cassert>
 
 const float fSPEED = 1.0f;
 const float fNEIGHBOURHOOD_RADIUS = 2.0f;
@@ -14,13 +18,13 @@ BrainComponent::BrainComponent(Entity* a_pOwner)
 	: Component(a_pOwner)
 	, m_v3CurrentVelocity(0.0f)
 	, m_v3WanderPoint(0.0f)
-	, m_v3Target(4.0f, 0.0f, 4.0f)
-	, m_arrive(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
-	, m_flee(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
-	, m_seek(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3Target, &m_v3CurrentVelocity)
-	, m_wander(static_cast<TransformComponent*>(a_pOwner->FindComponentOfType(TRANSFORM)), &m_v3CurrentVelocity)
 {
 	m_eComponentType = BRAIN;
+}
+
+BrainComponent::~BrainComponent()
+{
+	ClearBehaviours();
 }
 
 void BrainComponent::Update(float a_fDeltaTime)
@@ -40,24 +44,10 @@ void BrainComponent::Update(float a_fDeltaTime)
 	//calculate forces
 	glm::vec3 v3FinalForce(0.0f);
 
-	//glm::vec3 v3SeporationForce = CalculateSeporationForce();
-	//glm::vec3 v3AlignmentForce = CalculateAlignmentForce();
-	//glm::vec3 v3CohisionForce = CalculateCohesionForce();
-
-	//Arrive
-	glm::vec3 v3ArriveForce = m_arrive.Force();
-
-	//seek
-	glm::vec3 v3SeekForce = m_seek.Force();
-	
-	//flee
-	glm::vec3 v3FleeForce = m_flee.Force();
-
-	//wander
-	glm::vec3 v3WanderForce = m_wander.Force();
-
-	//v3FinalForce = v3SeporationForce * 3 + v3CohisionForce * 1 + v3AlignmentForce;
-	v3FinalForce = v3SeekForce;
+	for (auto item : m_behaviours)
+	{
+		v3FinalForce += item.second->Force();
+	}
 
 	//velocity
 	m_v3CurrentVelocity += v3FinalForce / m_fMass;
@@ -217,4 +207,85 @@ glm::vec3 BrainComponent::CalculateCohesionForce()
 	}
 
 	return v3CohesionVelocity;
+}
+
+
+Behaviour* BrainComponent::AddBehaviour(unsigned priority, Behaviour* pBehaviour)
+{
+	assert(pBehaviour != nullptr);
+	Behaviour* pPrev = nullptr;
+
+	auto previous = m_behaviours.find(priority);
+	if (previous != m_behaviours.end())
+	{
+		pPrev = previous->second;
+	}
+	else
+	{
+		m_behaviours[priority] = pBehaviour;
+	}
+	return pPrev;
+}
+
+Behaviour* BrainComponent::GetBehaviour(unsigned priority) const
+{
+	Behaviour* pPrev = nullptr;
+	auto previous = m_behaviours.find(priority);
+	if (previous != m_behaviours.end())
+	{
+		pPrev = previous->second;
+	}
+	return pPrev;
+}
+
+Behaviour* BrainComponent::RemoveBehaviour(unsigned priority)
+{
+	Behaviour* pPrev = nullptr;
+	auto previous = m_behaviours.find(priority);
+	if (previous != m_behaviours.end())
+	{
+		pPrev = previous->second;
+		m_behaviours.erase(priority);
+	}
+	return pPrev;
+}
+
+
+void BrainComponent::DeleteBehaviour(unsigned priority)
+{
+	auto previous = m_behaviours.find(priority);
+	if (previous != m_behaviours.end())
+	{
+		delete previous->second;
+		m_behaviours.erase(priority);
+	}
+}
+
+void BrainComponent::ClearBehaviours()
+{
+	for (auto item : m_behaviours)
+	{
+		delete item.second;
+	}
+	m_behaviours.clear();
+}
+
+void BrainComponent::AddSeekBehaviour(unsigned uPriority, const glm::vec3* pv3Target)
+{
+	Entity* pEntity = GetOwnerEntity();
+	if (!pEntity) return;
+
+	Seek* pSeek = new Seek(static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM)), pv3Target, &m_v3CurrentVelocity);
+	Behaviour* pPrev = AddBehaviour(uPriority, pSeek);
+	delete pPrev;
+}
+
+void BrainComponent::AddWanderBehaviour(unsigned uPriority)
+{
+	Entity* pEntity = GetOwnerEntity();
+	if (!pEntity) return;
+
+	Wander* pWander = new Wander(static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM)), &m_v3CurrentVelocity);
+	Behaviour* pPrev = AddBehaviour(uPriority, pWander);
+	delete pPrev;
 }

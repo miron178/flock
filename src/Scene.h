@@ -1,11 +1,14 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <glm/glm.hpp>
+
 //forward decloration
 struct GLFWwindow;
 class Camera;
 class Model;
 class Shader;
+class Entity;
 
 class Scene
 {
@@ -43,6 +46,9 @@ private:
 	// timing
 	float fDeltaTime;
 	float fLastFrame;
+
+	glm::vec3 m_v3Target;
+	Entity* m_pTarget = nullptr;
 };
 
 #endif // !SCENE_H

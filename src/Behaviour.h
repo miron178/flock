@@ -11,6 +11,10 @@ public:
 
 	virtual glm::vec3 Force() = 0;
 
+	void SetSpeed(float fSpeed) { m_fSpeed = fSpeed; }
+	void SetMaxSpeed(float fMaxSpeed) { m_fMaxSpeed = fMaxSpeed; }
+	void SetMaxForce(float fMaxForce) { m_fMaxForce = fMaxForce; }
+
 protected:
 	glm::vec3 AgentPos() const { return m_pAgent->GetEntityMatrixRow(POSITION_VECTOR); }
 	glm::vec3 AgentForward() const { return m_pAgent->GetEntityMatrixRow(FORWARD_VECTOR); }

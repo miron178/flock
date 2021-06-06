@@ -48,6 +48,8 @@ Scene::Scene()
     m_bFirstMouse=true;
     camera = nullptr;
     window = nullptr;
+
+    m_v3Target = glm::vec3(4.0f, 0.0f, 4.0f);
 }
 
 bool Scene::Initialise()
@@ -96,6 +98,31 @@ bool Scene::Initialise()
     //seed randGen
     srand(static_cast<unsigned>(time(nullptr)));
 
+    //create target entity
+    m_pTarget = new Entity();
+
+    //transform Component
+    TransformComponent* pTransformComponent = new TransformComponent(m_pTarget);
+    pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3(RandomFloatBetweenRange(0, 5),
+        0.0f,
+        RandomFloatBetweenRange(0, 5)));
+    m_pTarget->AddComponent(pTransformComponent);
+
+    //model component
+    ModelComponent* pModelComponent = new ModelComponent(m_pTarget);
+    pModelComponent->SetModel(m_pNanosuitModel);
+    pModelComponent->SetScale(0.02f);
+    m_pTarget->AddComponent(pModelComponent);
+
+    //brain component
+    BrainComponent* pBrainComponent = new BrainComponent(m_pTarget);
+    m_pTarget->AddComponent(pBrainComponent);
+
+    pBrainComponent->AddWanderBehaviour(0);
+    Behaviour* pBehaviour = pBrainComponent->GetBehaviour(0);
+    pBehaviour->SetMaxSpeed(2);
+    pBehaviour->SetSpeed(2);
+
     //create Entities
     for (int i = 0; i < NUM_OF_BOIDS; ++i)
     {
@@ -117,6 +144,8 @@ bool Scene::Initialise()
         //brain component
         BrainComponent* pBrainComponent = new BrainComponent(pEntity);
         pEntity->AddComponent(pBrainComponent);
+
+        pBrainComponent->AddSeekBehaviour(0, &m_v3Target);
     }
 
     return true;
@@ -142,6 +171,9 @@ bool Scene::Update()
             pEntity->Update(fDeltaTime);
         }
     }
+
+    TransformComponent* pTargetTransform = static_cast<TransformComponent*>(m_pTarget->FindComponentOfType(TRANSFORM));
+    m_v3Target = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
 
     //return close or not
 	return !glfwWindowShouldClose(window);
