@@ -11,6 +11,8 @@ public:
     virtual glm::vec3 Force() override;
 
 private:
+    virtual glm::vec3 Target();
+
     float m_fRadius;
 };
 

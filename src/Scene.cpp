@@ -20,6 +20,7 @@
 #include "BrainComponent.h"
 #include "PhysicsComponent.h"
 #include "Seek.h"
+#include "Pursue.h"
 #include "Wander.h"
 
 //STD

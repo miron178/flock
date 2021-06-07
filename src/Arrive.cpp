@@ -6,9 +6,15 @@ Arrive::Arrive(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, c
 	, m_fRadius(a_fRadius)
 {}
 
+glm::vec3 Arrive::Target()
+{
+	return glm::vec3(TargetPos() - AgentPos());
+}
+
 glm::vec3 Arrive::Force()
 {
-	glm::vec3 v3TargetDir(TargetPos() - AgentPos());
+	glm::vec3 v3TargetDir = Target();
+
 	float fDistance = glm::length(v3TargetDir);
 	if (fDistance == 0)
 	{
