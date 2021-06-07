@@ -5,7 +5,7 @@ class Entity;
 class Shader;
 
 
-enum COMPONENT_TYPE
+enum class COMPONENT_TYPE
 {
 	NONE,
 	TRANSFORM,
@@ -16,7 +16,7 @@ enum COMPONENT_TYPE
 class Component
 {
 public:
-	Component(Entity* a_pOwner);
+	Component(Entity* a_pOwner, COMPONENT_TYPE a_eComponentType);
 	~Component() = default;
 
 	virtual void Update(float a_fDeltaTime) = 0;

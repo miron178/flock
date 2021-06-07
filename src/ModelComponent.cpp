@@ -9,17 +9,11 @@
 #include "TransformComponent.h"
 #include "Entity.h"
 
-
-
-typedef Component PARENT;
-
 ModelComponent::ModelComponent(Entity* a_OwnerEntity)
-	: PARENT(a_OwnerEntity)
+	: Component(a_OwnerEntity, COMPONENT_TYPE::MODEL)
 	, m_pModelData (nullptr)
 	, m_fModelScale(0.0f)
-{
-
-}
+{}
 
 ModelComponent::~ModelComponent()
 {
@@ -39,7 +33,7 @@ void ModelComponent::Draw(Shader* a_pshader)
 	}
 
 	//get transform componant
-	TransformComponent* pTransFormComponent = static_cast<TransformComponent*>( m_pOwnerEntity->FindComponentOfType(TRANSFORM));
+	TransformComponent* pTransFormComponent = m_pOwnerEntity->FindTransformComponent();
 	if (!pTransFormComponent)
 	{
 		//ERROR TODO (maybe)

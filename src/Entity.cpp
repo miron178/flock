@@ -56,3 +56,13 @@ Component* Entity::FindComponentOfType(COMPONENT_TYPE a_eComponentType) const
 	}
 	return nullptr;
 }
+
+TransformComponent* Entity::FindTransformComponent() const
+{
+	return reinterpret_cast<TransformComponent*>(FindComponentOfType(COMPONENT_TYPE::TRANSFORM));
+}
+
+BrainComponent* Entity::FindBrainComponent() const
+{
+	return reinterpret_cast<BrainComponent*>(FindComponentOfType(COMPONENT_TYPE::BRAIN));
+}

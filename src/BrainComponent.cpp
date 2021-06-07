@@ -15,12 +15,10 @@ const float fWANDER_RADIUS = 4.0f;
 const float fCIRCLE_FORWARD_MULTIPLIER = 1.0f;
 
 BrainComponent::BrainComponent(Entity* a_pOwner)
-	: Component(a_pOwner)
+	: Component(a_pOwner, COMPONENT_TYPE::BRAIN)
 	, m_v3CurrentVelocity(0.0f)
 	, m_v3WanderPoint(0.0f)
-{
-	m_eComponentType = BRAIN;
-}
+{}
 
 BrainComponent::~BrainComponent()
 {
@@ -34,7 +32,7 @@ void BrainComponent::Update(float a_fDeltaTime)
 	if (!pEntity) return;
 
 	//get transform
-	TransformComponent* pTransComp = static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM));
+	TransformComponent* pTransComp = pEntity->FindTransformComponent();
 	if (!pTransComp) return;
 
 	//get vectors
@@ -76,7 +74,7 @@ glm::vec3 BrainComponent::CalculateSeporationForce()
 	unsigned int uNeighbourCount = 0;
 
 	//this transform
-	const TransformComponent* pLocalTransform = static_cast<TransformComponent*>(GetOwnerEntity()->FindComponentOfType(TRANSFORM));
+	const TransformComponent* pLocalTransform = GetOwnerEntity()->FindTransformComponent();
 
 	//this pos
 	glm::vec3 v3LocalPos = pLocalTransform->GetEntityMatrixRow(POSITION_VECTOR);
@@ -91,7 +89,7 @@ glm::vec3 BrainComponent::CalculateSeporationForce()
 		const Entity* pTarget = xConstIter->second;
 		if (pTarget->GetEntityID() != GetOwnerEntity()->GetEntityID())
 		{
-			const TransformComponent* pTargetTransform = static_cast<TransformComponent*>(pTarget->FindComponentOfType(TRANSFORM));
+			const TransformComponent* pTargetTransform = pTarget->FindTransformComponent();
 
 			//find distance
 			glm::vec3 v3TargetPos = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
@@ -122,7 +120,7 @@ glm::vec3 BrainComponent::CalculateAlignmentForce()
 	unsigned int uNeighbourCount = 0;
 
 	//this transform
-	const TransformComponent* pLocalTransform = static_cast<TransformComponent*>(GetOwnerEntity()->FindComponentOfType(TRANSFORM));
+	const TransformComponent* pLocalTransform = GetOwnerEntity()->FindTransformComponent();
 
 	//this pos
 	glm::vec3 v3LocalPos = pLocalTransform->GetEntityMatrixRow(POSITION_VECTOR);
@@ -137,8 +135,8 @@ glm::vec3 BrainComponent::CalculateAlignmentForce()
 		const Entity* pTarget = xConstIter->second;
 		if (pTarget->GetEntityID() != GetOwnerEntity()->GetEntityID())
 		{
-			const TransformComponent* pTargetTransform = static_cast<TransformComponent*>(pTarget->FindComponentOfType(TRANSFORM));
-			const BrainComponent* pTargetBrain = static_cast<BrainComponent*>(pTarget->FindComponentOfType(BRAIN));
+			const TransformComponent* pTargetTransform = pTarget->FindTransformComponent();
+			const BrainComponent* pTargetBrain = pTarget->FindBrainComponent();
 
 			//find distance
 			glm::vec3 v3TargetPos = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
@@ -169,7 +167,7 @@ glm::vec3 BrainComponent::CalculateCohesionForce()
 	unsigned int uNeighbourCount = 0;
 
 	//this transform
-	const TransformComponent* pLocalTransform = static_cast<TransformComponent*>(GetOwnerEntity()->FindComponentOfType(TRANSFORM));
+	const TransformComponent* pLocalTransform = GetOwnerEntity()->FindTransformComponent();
 
 	//this pos
 	glm::vec3 v3LocalPos = pLocalTransform->GetEntityMatrixRow(POSITION_VECTOR);
@@ -184,7 +182,7 @@ glm::vec3 BrainComponent::CalculateCohesionForce()
 		const Entity* pTarget = xConstIter->second;
 		if (pTarget->GetEntityID() != GetOwnerEntity()->GetEntityID())
 		{
-			const TransformComponent* pTargetTransform = static_cast<TransformComponent*>(pTarget->FindComponentOfType(TRANSFORM));
+			const TransformComponent* pTargetTransform = pTarget->FindTransformComponent();
 
 			//find distance
 			glm::vec3 v3TargetPos = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
@@ -275,7 +273,7 @@ void BrainComponent::AddSeekBehaviour(unsigned a_uPriority, const glm::vec3* a_p
 	Entity* pEntity = GetOwnerEntity();
 	if (!pEntity) return;
 
-	Seek* pSeek = new Seek(static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM)), a_pv3Target, &m_v3CurrentVelocity);
+	Seek* pSeek = new Seek(pEntity->FindTransformComponent(), a_pv3Target, &m_v3CurrentVelocity);
 	Behaviour* pPrev = AddBehaviour(a_uPriority, pSeek);
 	delete pPrev;
 }
@@ -285,7 +283,7 @@ void BrainComponent::AddWanderBehaviour(unsigned a_uPriority)
 	Entity* pEntity = GetOwnerEntity();
 	if (!pEntity) return;
 
-	Wander* pWander = new Wander(static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM)), &m_v3CurrentVelocity);
+	Wander* pWander = new Wander(pEntity->FindTransformComponent(), &m_v3CurrentVelocity);
 	Behaviour* pPrev = AddBehaviour(a_uPriority, pWander);
 	delete pPrev;
 }

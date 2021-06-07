@@ -172,7 +172,7 @@ bool Scene::Update()
         }
     }
 
-    TransformComponent* pTargetTransform = static_cast<TransformComponent*>(m_pTarget->FindComponentOfType(TRANSFORM));
+    TransformComponent* pTargetTransform = m_pTarget->FindTransformComponent();
     m_v3Target = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
 
     //return close or not

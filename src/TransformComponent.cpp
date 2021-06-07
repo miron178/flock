@@ -1,12 +1,9 @@
 #include "TransformComponent.h"
 
-typedef Component PARANT;
-
 TransformComponent::TransformComponent(Entity* a_pOwner)
-	: PARANT(a_pOwner)
+	: Component(a_pOwner, COMPONENT_TYPE::TRANSFORM)
 	, m_m4EntityMatrix(glm::mat4(1.0f))
 {
-	m_eComponentType = TRANSFORM;
 }
 
 TransformComponent::~TransformComponent()
