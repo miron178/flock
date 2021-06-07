@@ -23,7 +23,7 @@ public:
 
 	glm::vec3 GetForce() const { return m_v3Force; }
 	void SetForce(glm::vec3 a_v3Force) { m_v3Force = a_v3Force; }
-	void AddForce(glm::vec3 a_v3Force) { m_v3Force = a_v3Force; }
+	void AddForce(glm::vec3 a_v3Force) { m_v3Force += a_v3Force; }
 
 private:
 	TransformComponent* m_pTransformComponent;
@@ -31,6 +31,9 @@ private:
 	float m_fMass = 1;
 	glm::vec3 m_v3Velocity;
 	glm::vec3 m_v3Force;
+
+	float m_fMaxForce = 10;
+	float m_fMaxVelocity = 10;
 };
 
 #endif

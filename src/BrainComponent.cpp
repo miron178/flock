@@ -25,22 +25,14 @@ void BrainComponent::Update(float a_fDeltaTime)
 	Entity* pEntity = GetOwnerEntity();
 	if (!pEntity) return;
 
-	//get transform
-	TransformComponent* pTransComp = pEntity->FindTransformComponent();
-	if (!pTransComp) return;
-
 	PhysicsComponent* pPhysicsComponent = pEntity->FindPhysicsComponent();
 	if (!pPhysicsComponent) return;
 
 	//calculate forces
-	glm::vec3 v3FinalForce(0.0f);
-
 	for (auto item : m_behaviours)
 	{
-		v3FinalForce += item.second->Force();
+		pPhysicsComponent->AddForce(item.second->Force());
 	}
-
-	pPhysicsComponent->AddForce(v3FinalForce);
 }
 
 glm::vec3 BrainComponent::CalculateSeporationForce()

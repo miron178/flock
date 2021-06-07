@@ -87,6 +87,8 @@ add_executable(Flock
 	src/behaviours/Pursue.h
 	src/behaviours/Seek.cpp
 	src/behaviours/Seek.h
+	src/behaviours/Separation.cpp
+	src/behaviours/Separation.h
 	src/behaviours/Wander.cpp
 	src/behaviours/Wander.h
 )

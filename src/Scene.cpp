@@ -24,6 +24,7 @@
 #include "Pursue.h"
 #include "Evade.h"
 #include "Wander.h"
+#include "Separation.h"
 
 //STD
 #include <iostream>
@@ -162,14 +163,17 @@ bool Scene::Initialise()
         //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pSeek);
 
-        //Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(0, pPursue);
+        Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        pBrainComponent->AddBehaviour(0, pPursue);
 
         //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pFlee);
 
-        Evade* pEvade = new Evade(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        pBrainComponent->AddBehaviour(0, pEvade);
+        //Evade* pEvade = new Evade(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(0, pEvade);
+
+        Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
+        pBrainComponent->AddBehaviour(1, pSeparation);
     }
 
     return true;

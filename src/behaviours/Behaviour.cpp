@@ -1,4 +1,5 @@
 #include "Behaviour.h"
+#include "Entity.h"
 
 #define FLAT
 

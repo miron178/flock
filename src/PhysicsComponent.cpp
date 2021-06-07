@@ -15,8 +15,19 @@ void PhysicsComponent::Update(float a_fDeltaTime)
 	glm::vec3 v3Position = m_pTransformComponent->GetEntityMatrixRow(POSITION_VECTOR);
 	glm::vec3 v3Forward  = m_pTransformComponent->GetEntityMatrixRow(FORWARD_VECTOR);
 
+	if (glm::length2(m_v3Force) > m_fMaxForce * m_fMaxForce)
+	{
+		m_v3Force = glm::normalize(m_v3Force) * m_fMaxForce;
+	}
+
 	m_v3Velocity += m_v3Force / m_fMass;
-	//m_v3CurrentVelocity = glm::clamp(m_v3CurrentVelocity, glm::vec3(-10.0f, 0.0f, -10.0f), glm::vec3(10.0f, 0.0f, 10.0f));
+
+	if (glm::length2(m_v3Velocity) > m_fMaxVelocity * m_fMaxVelocity)
+	{
+		m_v3Velocity = glm::normalize(m_v3Velocity) * m_fMaxVelocity;
+	}
+
+	m_v3Velocity = glm::clamp(m_v3Velocity, glm::vec3(-10.0f, 0.0f, -10.0f), glm::vec3(10.0f, 0.0f, 10.0f));
 	v3Position += m_v3Velocity * a_fDeltaTime;
 	v3Forward = m_v3Velocity;
 	if (glm::length(v3Forward) > 0.0f)
