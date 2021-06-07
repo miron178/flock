@@ -3,10 +3,12 @@
 #include "TransformComponent.h"
 #include <glm/glm.hpp>
 
+class PhysicsComponent;
+
 class Behaviour
 {
 public:
-	Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity);
+	Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* pPhysicsComponent);
 	virtual ~Behaviour() = default;
 
 	virtual glm::vec3 Force() = 0;
@@ -29,7 +31,7 @@ protected:
 protected:
 	const TransformComponent* m_pAgent;
 	const glm::vec3* m_pTarget;
-	const glm::vec3* m_pv3Velocity;
+	const PhysicsComponent* m_pPhysicsComponent;
 
 	float m_fSpeed = 1.0f;
 	float m_fMaxSpeed = 1.0f;

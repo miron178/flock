@@ -66,3 +66,8 @@ BrainComponent* Entity::FindBrainComponent() const
 {
 	return reinterpret_cast<BrainComponent*>(FindComponentOfType(COMPONENT_TYPE::BRAIN));
 }
+
+PhysicsComponent* Entity::FindPhysicsComponent() const
+{
+	return reinterpret_cast<PhysicsComponent*>(FindComponentOfType(COMPONENT_TYPE::PHYSICS));
+}

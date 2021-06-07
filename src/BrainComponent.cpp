@@ -1,6 +1,7 @@
 #include "BrainComponent.h"
 
 #include "Entity.h"
+#include "PhysicsComponent.h"
 #include "TransformComponent.h"
 #include "Seek.h"
 #include "Wander.h"
@@ -16,8 +17,6 @@ const float fCIRCLE_FORWARD_MULTIPLIER = 1.0f;
 
 BrainComponent::BrainComponent(Entity* a_pOwner)
 	: Component(a_pOwner, COMPONENT_TYPE::BRAIN)
-	, m_v3CurrentVelocity(0.0f)
-	, m_v3WanderPoint(0.0f)
 {}
 
 BrainComponent::~BrainComponent()
@@ -35,9 +34,8 @@ void BrainComponent::Update(float a_fDeltaTime)
 	TransformComponent* pTransComp = pEntity->FindTransformComponent();
 	if (!pTransComp) return;
 
-	//get vectors
-	glm::vec3 v3Forward    = pTransComp->GetEntityMatrixRow(FORWARD_VECTOR);
-	glm::vec3 v3CurrentPos = pTransComp->GetEntityMatrixRow(POSITION_VECTOR);
+	PhysicsComponent* pPhysicsComponent = pEntity->FindPhysicsComponent();
+	if (!pPhysicsComponent) return;
 
 	//calculate forces
 	glm::vec3 v3FinalForce(0.0f);
@@ -47,24 +45,7 @@ void BrainComponent::Update(float a_fDeltaTime)
 		v3FinalForce += item.second->Force();
 	}
 
-	//velocity
-	m_v3CurrentVelocity += v3FinalForce / m_fMass;
-	m_v3CurrentVelocity = glm::clamp(m_v3CurrentVelocity, glm::vec3(-10.0f, 0.0f, -10.0f), glm::vec3(10.0f, 0.0f, 10.0f));
-	v3CurrentPos += m_v3CurrentVelocity * a_fDeltaTime;
-
-	v3Forward = m_v3CurrentVelocity;
-	if (glm::length(v3Forward) > 0.0f)
-	{
-		v3Forward = glm::normalize(v3Forward);
-
-		glm::vec3 v3Up = pTransComp->GetEntityMatrixRow(UP_VECTOR);
-		glm::vec3 v3Right = glm::cross(v3Up, v3Forward);
-
-		//matrix
-		pTransComp->SetEntityMatrixRow(RIGHT_VECTOR, v3Right);
-		pTransComp->SetEntityMatrixRow(FORWARD_VECTOR, v3Forward);
-	}
-	pTransComp->SetEntityMatrixRow(POSITION_VECTOR, v3CurrentPos);
+	pPhysicsComponent->AddForce(v3FinalForce);
 }
 
 glm::vec3 BrainComponent::CalculateSeporationForce()
@@ -137,6 +118,7 @@ glm::vec3 BrainComponent::CalculateAlignmentForce()
 		{
 			const TransformComponent* pTargetTransform = pTarget->FindTransformComponent();
 			const BrainComponent* pTargetBrain = pTarget->FindBrainComponent();
+			const PhysicsComponent* pTargetPhysics = pTarget->FindPhysicsComponent();
 
 			//find distance
 			glm::vec3 v3TargetPos = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
@@ -146,7 +128,7 @@ glm::vec3 BrainComponent::CalculateAlignmentForce()
 			if (fDistanceBetween < fNEIGHBOURHOOD_RADIUS)
 			{
 				float fStrength = 1 - fDistanceBetween / fNEIGHBOURHOOD_RADIUS;
-				v3AlignmentVelocity += pTargetBrain->GetCurrentVelocity() * fStrength;
+				v3AlignmentVelocity += pTargetPhysics->GetVelocity() * fStrength;
 				uNeighbourCount++;
 			}
 		}
@@ -266,24 +248,4 @@ void BrainComponent::ClearBehaviours()
 		delete item.second;
 	}
 	m_behaviours.clear();
-}
-
-void BrainComponent::AddSeekBehaviour(unsigned a_uPriority, const glm::vec3* a_pv3Target)
-{
-	Entity* pEntity = GetOwnerEntity();
-	if (!pEntity) return;
-
-	Seek* pSeek = new Seek(pEntity->FindTransformComponent(), a_pv3Target, &m_v3CurrentVelocity);
-	Behaviour* pPrev = AddBehaviour(a_uPriority, pSeek);
-	delete pPrev;
-}
-
-void BrainComponent::AddWanderBehaviour(unsigned a_uPriority)
-{
-	Entity* pEntity = GetOwnerEntity();
-	if (!pEntity) return;
-
-	Wander* pWander = new Wander(pEntity->FindTransformComponent(), &m_v3CurrentVelocity);
-	Behaviour* pPrev = AddBehaviour(a_uPriority, pWander);
-	delete pPrev;
 }

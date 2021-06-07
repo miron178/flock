@@ -1,7 +1,7 @@
 #include "Wander.h"
 
-Wander::Wander(const TransformComponent* a_pAgent, const glm::vec3* a_pv3Velocity)
-	: Seek(a_pAgent, &m_v3Target, a_pv3Velocity)
+Wander::Wander(const TransformComponent* a_pAgent, const PhysicsComponent* a_pPhysicsComponent)
+	: Seek(a_pAgent, &m_v3Target, a_pPhysicsComponent)
 {
 	m_v3Direction = SphericalRand(m_fRadius);
 	m_fMaxSpeed = m_fDistance + m_fRadius;

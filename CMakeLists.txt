@@ -74,6 +74,8 @@ add_executable(Flock
 	src/main.cpp
 	src/ModelComponent.cpp
 	src/ModelComponent.h
+	src/PhysicsComponent.cpp
+	src/PhysicsComponent.h
 	src/Scene.cpp
 	src/Scene.h
 	src/Seek.cpp

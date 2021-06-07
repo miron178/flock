@@ -1,7 +1,8 @@
 #include "Arrive.h"
+#include "PhysicsComponent.h"
 
-Arrive::Arrive(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity, float a_fRadius)
-	: Behaviour(a_pAgent, a_pTarget, a_pv3Velocity)
+Arrive::Arrive(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent, float a_fRadius)
+	: Behaviour(a_pAgent, a_pTarget, a_pPhysicsComponent)
 	, m_fRadius(a_fRadius)
 {}
 
@@ -21,5 +22,5 @@ glm::vec3 Arrive::Force()
 		fMultiplier = fDistance / m_fRadius;
 	}
 	glm::vec3 v3DesiredVelocity = ClampVelocity(v3TargetDir * m_fSpeed * fMultiplier);
-	return ClampForce(v3DesiredVelocity - *m_pv3Velocity);
+	return ClampForce(v3DesiredVelocity - m_pPhysicsComponent->GetVelocity());
 }

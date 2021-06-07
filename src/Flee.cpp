@@ -1,7 +1,8 @@
 #include "Flee.h"
+#include "PhysicsComponent.h"
 
-Flee::Flee(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity)
-	: Behaviour(a_pAgent, a_pTarget, a_pv3Velocity)
+Flee::Flee(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent)
+	: Behaviour(a_pAgent, a_pTarget, a_pPhysicsComponent)
 {}
 
 glm::vec3 Flee::Force()
@@ -16,5 +17,5 @@ glm::vec3 Flee::Force()
 		v3AwayDir = glm::normalize(v3AwayDir);
 	}
 	glm::vec3 v3DesiredVelocity = ClampVelocity(v3AwayDir * m_fSpeed);
-	return ClampForce(v3DesiredVelocity - *m_pv3Velocity);
+	return ClampForce(v3DesiredVelocity - m_pPhysicsComponent->GetVelocity());
 }

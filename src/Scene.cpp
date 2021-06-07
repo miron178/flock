@@ -18,6 +18,9 @@
 #include "TransformComponent.h"
 #include "ModelComponent.h"
 #include "BrainComponent.h"
+#include "PhysicsComponent.h"
+#include "Seek.h"
+#include "Wander.h"
 
 //STD
 #include <iostream>
@@ -118,10 +121,14 @@ bool Scene::Initialise()
     BrainComponent* pBrainComponent = new BrainComponent(m_pTarget);
     m_pTarget->AddComponent(pBrainComponent);
 
-    pBrainComponent->AddWanderBehaviour(0);
-    Behaviour* pBehaviour = pBrainComponent->GetBehaviour(0);
-    pBehaviour->SetMaxSpeed(2);
-    pBehaviour->SetSpeed(2);
+    //physics component
+    PhysicsComponent* pPhysicsComponent = new PhysicsComponent(m_pTarget);
+    m_pTarget->AddComponent(pPhysicsComponent);
+
+    Wander* pWander = new Wander(pTransformComponent, pPhysicsComponent);
+    pWander->SetMaxSpeed(2);
+    pWander->SetSpeed(2);
+    pBrainComponent->AddBehaviour(0, pWander);
 
     //create Entities
     for (int i = 0; i < NUM_OF_BOIDS; ++i)
@@ -141,11 +148,16 @@ bool Scene::Initialise()
         pModelComponent->SetScale(0.02f);
         pEntity->AddComponent(pModelComponent);
 
+        //physics component
+        PhysicsComponent* pPhysicsComponent = new PhysicsComponent(pEntity);
+        pEntity->AddComponent(pPhysicsComponent);
+
         //brain component
         BrainComponent* pBrainComponent = new BrainComponent(pEntity);
         pEntity->AddComponent(pBrainComponent);
 
-        pBrainComponent->AddSeekBehaviour(0, &m_v3Target);
+        Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        pBrainComponent->AddBehaviour(0, pSeek);
     }
 
     return true;

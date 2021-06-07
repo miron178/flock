@@ -11,6 +11,7 @@ enum class COMPONENT_TYPE
 	TRANSFORM,
 	MODEL,
 	BRAIN,
+	PHYSICS,
 };
 
 class Component

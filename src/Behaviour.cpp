@@ -2,10 +2,10 @@
 
 #define FLAT
 
-Behaviour::Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity)
+Behaviour::Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent)
 	: m_pAgent(a_pAgent)
 	, m_pTarget(a_pTarget)
-	, m_pv3Velocity(a_pv3Velocity)
+	, m_pPhysicsComponent(a_pPhysicsComponent)
 {}
 
 glm::vec3 Behaviour::Clamp(const glm::vec3& a_v3, float a_max) const
