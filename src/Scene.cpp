@@ -228,15 +228,15 @@ void Scene::Deinitialise()
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
-void Scene::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void Scene::framebuffer_size_callback(GLFWwindow* a_window, int a_width, int a_height)
 {
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, a_width, a_height);
 }
 
 // glfw: whenever the mouse moves, this callback is called
-void Scene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void Scene::mouse_callback(GLFWwindow* a_window, double a_xpos, double a_ypos)
 {
     Scene* pScene = Scene::GetInstance();
     if (!pScene)
@@ -245,16 +245,16 @@ void Scene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     }
     if (pScene->m_bFirstMouse)
     {
-        pScene->m_fLastX = static_cast<float>(xpos);
-        pScene->m_fLastY = static_cast<float>(ypos);
+        pScene->m_fLastX = static_cast<float>(a_xpos);
+        pScene->m_fLastY = static_cast<float>(a_ypos);
         pScene->m_bFirstMouse = false;
     }
 
-    float xoffset = static_cast<float>(xpos) - pScene->m_fLastX;
-    float yoffset = pScene->m_fLastY - static_cast<float>(ypos); // reversed since y-coordinates go from bottom to top
+    float xoffset = static_cast<float>(a_xpos) - pScene->m_fLastX;
+    float yoffset = pScene->m_fLastY - static_cast<float>(a_ypos); // reversed since y-coordinates go from bottom to top
 
-    pScene->m_fLastX = static_cast<float>(xpos);
-    pScene->m_fLastY = static_cast<float>(ypos);
+    pScene->m_fLastX = static_cast<float>(a_xpos);
+    pScene->m_fLastY = static_cast<float>(a_ypos);
 
     if (pScene->camera)
     {
@@ -263,22 +263,22 @@ void Scene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
-void Scene::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void Scene::scroll_callback(GLFWwindow* a_window, double a_xoffset, double a_yoffset)
 {
     Scene* pScene = Scene::GetInstance();
     if (!pScene || !pScene->camera)
     {
         return; //stop program
     }
-    pScene->camera->ProcessMouseScroll(static_cast<float>(yoffset));
+    pScene->camera->ProcessMouseScroll(static_cast<float>(a_yoffset));
 }
 
-int Scene::RandomNumberBetweenRange(int iLowerRange, int iUpperRange)
+int Scene::RandomNumberBetweenRange(int a_iLowerRange, int a_iUpperRange)
 {
-    return rand() % (glm::abs(iLowerRange - iUpperRange)) + (iLowerRange);
+    return rand() % (glm::abs(a_iLowerRange - a_iUpperRange)) + (a_iLowerRange);
 }
 
-float Scene::RandomFloatBetweenRange(float fLowerRange, float fUpperRange)
+float Scene::RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange)
 {
-    return fLowerRange + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (fUpperRange - fLowerRange)));
+    return a_fLowerRange + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (a_fUpperRange - a_fLowerRange)));
 }

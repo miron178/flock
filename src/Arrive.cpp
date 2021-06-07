@@ -1,8 +1,8 @@
 #include "Arrive.h"
 
-Arrive::Arrive(const TransformComponent* pAgent, const glm::vec3* pTarget, const glm::vec3* pv3Velocity, float fRadius)
-	: Behaviour(pAgent, pTarget, pv3Velocity)
-	, m_fRadius(fRadius)
+Arrive::Arrive(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity, float a_fRadius)
+	: Behaviour(a_pAgent, a_pTarget, a_pv3Velocity)
+	, m_fRadius(a_fRadius)
 {}
 
 glm::vec3 Arrive::Force()

@@ -25,14 +25,14 @@ private:
 	Scene(const Scene&);
 	Scene& operator=(const Scene&);
 
-	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	static void framebuffer_size_callback(GLFWwindow* a_window, int a_width, int a_height);
+	static void mouse_callback(GLFWwindow* a_window, double a_xpos, double a_ypos);
+	static void scroll_callback(GLFWwindow* a_window, double a_xoffset, double a_yoffset);
 
 	static Scene* s_pSceneInstanc;
 
-	int RandomNumberBetweenRange(int iLowerRange, int iUpperRange);
-	float RandomFloatBetweenRange(float fLowerRange, float fUpperRange);
+	int RandomNumberBetweenRange(int a_iLowerRange, int a_iUpperRange);
+	float RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange);
 	
 	GLFWwindow* window;
 	Camera* camera;

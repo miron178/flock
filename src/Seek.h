@@ -6,7 +6,7 @@
 class Seek : public Arrive
 {
 public:
-    Seek(const TransformComponent* pAgent, const glm::vec3* pTarget, const glm::vec3* pv3Velocity);
+    Seek(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity);
     virtual ~Seek() = default;
 };
 

@@ -1,7 +1,7 @@
 #include "Flee.h"
 
-Flee::Flee(const TransformComponent* pAgent, const glm::vec3* pTarget, const glm::vec3* pv3Velocity)
-	: Behaviour(pAgent, pTarget, pv3Velocity)
+Flee::Flee(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity)
+	: Behaviour(a_pAgent, a_pTarget, a_pv3Velocity)
 {}
 
 glm::vec3 Flee::Force()

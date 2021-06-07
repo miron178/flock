@@ -17,7 +17,7 @@ public:
 	virtual void Draw(Shader* a_pShader);
 
 	void AddComponent(Component* a_pComponent);
-	Component* FindComponentOfType(COMPONENT_TYPE m_eComponentType) const;
+	Component* FindComponentOfType(COMPONENT_TYPE a_eComponentType) const;
 
 	static const std::map<const unsigned int, Entity*>& GetEntityMap() { return s_xEntityList; }
 	unsigned int GetEntityID() const { return m_uEntityID; }

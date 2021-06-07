@@ -20,15 +20,15 @@ public:
 
     glm::vec3 GetCurrentVelocity() const { return m_v3CurrentVelocity; }
 
-    void AddSeekBehaviour(unsigned uPriority, const glm::vec3* pv3Target);
-    void AddWanderBehaviour(unsigned uPriority);
+    void AddSeekBehaviour(unsigned a_uPriority, const glm::vec3* a_pv3Target);
+    void AddWanderBehaviour(unsigned a_uPriority);
 
-    Behaviour* GetBehaviour(unsigned priority) const;
+    Behaviour* GetBehaviour(unsigned a_priority) const;
 
 private:
-    Behaviour* AddBehaviour(unsigned priority, Behaviour* pBehaviour);
-    Behaviour* RemoveBehaviour(unsigned priority);
-    void DeleteBehaviour(unsigned priority);
+    Behaviour* AddBehaviour(unsigned a_priority, Behaviour* a_pBehaviour);
+    Behaviour* RemoveBehaviour(unsigned a_priority);
+    void DeleteBehaviour(unsigned a_priority);
     void ClearBehaviours();
 
 private:

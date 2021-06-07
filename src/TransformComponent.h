@@ -15,7 +15,7 @@ enum MATRIX_ROW
 class TransformComponent : public Component
 {
 public:
-	TransformComponent(Entity* pOwner);
+	TransformComponent(Entity* a_pOwner);
 	~TransformComponent();
 
 	virtual void Update(float a_fDeltaTime) override {};

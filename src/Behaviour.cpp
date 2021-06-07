@@ -2,15 +2,15 @@
 
 #define FLAT
 
-Behaviour::Behaviour(const TransformComponent* pAgent, const glm::vec3* pTarget, const glm::vec3* pv3Velocity)
-	: m_pAgent(pAgent)
-	, m_pTarget(pTarget)
-	, m_pv3Velocity(pv3Velocity)
+Behaviour::Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity)
+	: m_pAgent(a_pAgent)
+	, m_pTarget(a_pTarget)
+	, m_pv3Velocity(a_pv3Velocity)
 {}
 
-glm::vec3 Behaviour::Clamp(const glm::vec3& v3, float max) const
+glm::vec3 Behaviour::Clamp(const glm::vec3& a_v3, float a_max) const
 {
-	return glm::length(v3) > max ? glm::normalize(v3) * max : v3;
+	return glm::length(a_v3) > a_max ? glm::normalize(a_v3) * a_max : a_v3;
 }
 
 glm::vec3 Behaviour::SphericalRand(float fRadius)

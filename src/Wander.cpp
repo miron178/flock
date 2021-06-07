@@ -1,7 +1,7 @@
 #include "Wander.h"
 
-Wander::Wander(const TransformComponent* pAgent, const glm::vec3* pv3Velocity)
-	: Seek(pAgent, &m_v3WanderPoint, pv3Velocity)
+Wander::Wander(const TransformComponent* a_pAgent, const glm::vec3* a_pv3Velocity)
+	: Seek(a_pAgent, &m_v3WanderPoint, a_pv3Velocity)
 {
 	NewTarget();
 }

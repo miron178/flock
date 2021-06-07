@@ -210,27 +210,27 @@ glm::vec3 BrainComponent::CalculateCohesionForce()
 }
 
 
-Behaviour* BrainComponent::AddBehaviour(unsigned priority, Behaviour* pBehaviour)
+Behaviour* BrainComponent::AddBehaviour(unsigned a_priority, Behaviour* a_pBehaviour)
 {
-	assert(pBehaviour != nullptr);
+	assert(a_pBehaviour != nullptr);
 	Behaviour* pPrev = nullptr;
 
-	auto previous = m_behaviours.find(priority);
+	auto previous = m_behaviours.find(a_priority);
 	if (previous != m_behaviours.end())
 	{
 		pPrev = previous->second;
 	}
 	else
 	{
-		m_behaviours[priority] = pBehaviour;
+		m_behaviours[a_priority] = a_pBehaviour;
 	}
 	return pPrev;
 }
 
-Behaviour* BrainComponent::GetBehaviour(unsigned priority) const
+Behaviour* BrainComponent::GetBehaviour(unsigned a_priority) const
 {
 	Behaviour* pPrev = nullptr;
-	auto previous = m_behaviours.find(priority);
+	auto previous = m_behaviours.find(a_priority);
 	if (previous != m_behaviours.end())
 	{
 		pPrev = previous->second;
@@ -238,26 +238,26 @@ Behaviour* BrainComponent::GetBehaviour(unsigned priority) const
 	return pPrev;
 }
 
-Behaviour* BrainComponent::RemoveBehaviour(unsigned priority)
+Behaviour* BrainComponent::RemoveBehaviour(unsigned a_priority)
 {
 	Behaviour* pPrev = nullptr;
-	auto previous = m_behaviours.find(priority);
+	auto previous = m_behaviours.find(a_priority);
 	if (previous != m_behaviours.end())
 	{
 		pPrev = previous->second;
-		m_behaviours.erase(priority);
+		m_behaviours.erase(a_priority);
 	}
 	return pPrev;
 }
 
 
-void BrainComponent::DeleteBehaviour(unsigned priority)
+void BrainComponent::DeleteBehaviour(unsigned a_priority)
 {
-	auto previous = m_behaviours.find(priority);
+	auto previous = m_behaviours.find(a_priority);
 	if (previous != m_behaviours.end())
 	{
 		delete previous->second;
-		m_behaviours.erase(priority);
+		m_behaviours.erase(a_priority);
 	}
 }
 
@@ -270,22 +270,22 @@ void BrainComponent::ClearBehaviours()
 	m_behaviours.clear();
 }
 
-void BrainComponent::AddSeekBehaviour(unsigned uPriority, const glm::vec3* pv3Target)
+void BrainComponent::AddSeekBehaviour(unsigned a_uPriority, const glm::vec3* a_pv3Target)
 {
 	Entity* pEntity = GetOwnerEntity();
 	if (!pEntity) return;
 
-	Seek* pSeek = new Seek(static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM)), pv3Target, &m_v3CurrentVelocity);
-	Behaviour* pPrev = AddBehaviour(uPriority, pSeek);
+	Seek* pSeek = new Seek(static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM)), a_pv3Target, &m_v3CurrentVelocity);
+	Behaviour* pPrev = AddBehaviour(a_uPriority, pSeek);
 	delete pPrev;
 }
 
-void BrainComponent::AddWanderBehaviour(unsigned uPriority)
+void BrainComponent::AddWanderBehaviour(unsigned a_uPriority)
 {
 	Entity* pEntity = GetOwnerEntity();
 	if (!pEntity) return;
 
 	Wander* pWander = new Wander(static_cast<TransformComponent*>(pEntity->FindComponentOfType(TRANSFORM)), &m_v3CurrentVelocity);
-	Behaviour* pPrev = AddBehaviour(uPriority, pWander);
+	Behaviour* pPrev = AddBehaviour(a_uPriority, pWander);
 	delete pPrev;
 }

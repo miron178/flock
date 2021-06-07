@@ -6,7 +6,7 @@
 class Flee : public Behaviour
 {
 public:
-    Flee(const TransformComponent* pAgent, const glm::vec3* pTarget, const glm::vec3* pv3Velocity);
+    Flee(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const glm::vec3* a_pv3Velocity);
     virtual ~Flee() = default;
     virtual glm::vec3 Force() override;
 };
