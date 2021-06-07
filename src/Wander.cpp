@@ -1,39 +1,18 @@
 #include "Wander.h"
 
 Wander::Wander(const TransformComponent* a_pAgent, const glm::vec3* a_pv3Velocity)
-	: Seek(a_pAgent, &m_v3WanderPoint, a_pv3Velocity)
+	: Seek(a_pAgent, &m_v3Target, a_pv3Velocity)
 {
-	NewTarget();
+	m_v3Direction = SphericalRand(m_fRadius);
+	m_fMaxSpeed = m_fDistance + m_fRadius;
 }
 
-bool Wander::Arrived() const
-{
-	return glm::distance(m_v3WanderPoint, AgentPos()) <= m_fJitter;
-}
-
-void Wander::NewTarget()
-{
-	glm::vec3 v3SphereOrigin = AgentPos() + (AgentForward() * m_fDistance);
-	glm::vec3 v3RandomPointOnSphere = SphericalRand(m_fRadius);
-	m_v3WanderPoint = v3SphereOrigin + v3RandomPointOnSphere;
-}
-
-void Wander::AddJitter()
-{
-	glm::vec3 v3Jitter = SphericalRand(m_fJitter);
-	m_v3WanderPoint += v3Jitter;
-}
 
 glm::vec3 Wander::Force()
 {
-	if (Arrived())
-	{
-		NewTarget();
-	}
-	else
-	{
-		AddJitter();
-	}
+	glm::vec3 v3Jitter = SphericalRand(m_fJitter);
+	m_v3Direction = glm::normalize(m_v3Direction + v3Jitter) * m_fRadius;
 
+	m_v3Target = AgentPos() + AgentForward() * m_fDistance + m_v3Direction;
 	return Seek::Force();
 }
