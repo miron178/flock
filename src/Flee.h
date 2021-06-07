@@ -1,14 +1,16 @@
 #ifndef FLEE_H
 #define FLEE_H
 
-#include "Behaviour.h"
+#include "Arrive.h"
 
-class Flee : public Behaviour
+class Flee : public Arrive
 {
 public:
     Flee(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent);
     virtual ~Flee() = default;
-    virtual glm::vec3 Force() override;
+
+private:
+    virtual glm::vec3 Target() override;
 };
 
 #endif //FLEE_H

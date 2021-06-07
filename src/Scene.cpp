@@ -20,6 +20,7 @@
 #include "BrainComponent.h"
 #include "PhysicsComponent.h"
 #include "Seek.h"
+#include "Flee.h"
 #include "Pursue.h"
 #include "Wander.h"
 
@@ -157,8 +158,14 @@ bool Scene::Initialise()
         BrainComponent* pBrainComponent = new BrainComponent(pEntity);
         pEntity->AddComponent(pBrainComponent);
 
-        Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        pBrainComponent->AddBehaviour(0, pSeek);
+        //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(0, pSeek);
+
+        //Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(0, pPursue);
+
+        Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        pBrainComponent->AddBehaviour(0, pFlee);
     }
 
     return true;
