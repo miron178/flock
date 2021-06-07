@@ -59,35 +59,36 @@ target_include_directories(learnopengl INTERFACE deps)
 
 #Main executable
 add_executable(Flock
-	src/Arrive.cpp
-	src/Arrive.h
-	src/Behaviour.cpp
-	src/Behaviour.h
 	src/BrainComponent.cpp
 	src/BrainComponent.h
 	src/Component.cpp
 	src/Component.h
 	src/Entity.cpp
 	src/Entity.h
-	src/Evade.cpp
-	src/Evade.h
-	src/Flee.cpp
-	src/Flee.h
 	src/main.cpp
 	src/ModelComponent.cpp
 	src/ModelComponent.h
 	src/PhysicsComponent.cpp
 	src/PhysicsComponent.h
-	src/Pursue.cpp
-	src/Pursue.h
 	src/Scene.cpp
 	src/Scene.h
-	src/Seek.cpp
-	src/Seek.h
 	src/TransformComponent.cpp
 	src/TransformComponent.h
-	src/Wander.cpp
-	src/Wander.h
+
+	src/behaviours/Arrive.cpp
+	src/behaviours/Arrive.h
+	src/behaviours/Behaviour.cpp
+	src/behaviours/Behaviour.h
+	src/behaviours/Evade.cpp
+	src/behaviours/Evade.h
+	src/behaviours/Flee.cpp
+	src/behaviours/Flee.h
+	src/behaviours/Pursue.cpp
+	src/behaviours/Pursue.h
+	src/behaviours/Seek.cpp
+	src/behaviours/Seek.h
+	src/behaviours/Wander.cpp
+	src/behaviours/Wander.h
 )
 
 if (MSVC)
@@ -102,6 +103,8 @@ endif()
 
 target_include_directories(Flock PUBLIC
 	deps/glad/include
+	src
+	src/behaviours
 )
 
 target_link_libraries(Flock PUBLIC assimp glad glm glfw imgui learnopengl)
