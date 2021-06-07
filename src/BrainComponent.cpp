@@ -8,12 +8,7 @@
 
 #include <cassert>
 
-const float fSPEED = 1.0f;
 const float fNEIGHBOURHOOD_RADIUS = 2.0f;
-
-const float fJITTER = 0.5f;
-const float fWANDER_RADIUS = 4.0f;
-const float fCIRCLE_FORWARD_MULTIPLIER = 1.0f;
 
 BrainComponent::BrainComponent(Entity* a_pOwner)
 	: Component(a_pOwner, COMPONENT_TYPE::BRAIN)

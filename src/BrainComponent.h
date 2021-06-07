@@ -31,8 +31,6 @@ private:
     glm::vec3 CalculateCohesionForce();
 
     //Variable
-    glm::vec3 m_v3WanderPoint;
-
     std::map<unsigned, Behaviour*> m_behaviours;
 };
 
