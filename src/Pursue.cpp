@@ -7,5 +7,6 @@ Pursue::Pursue(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, c
 
 glm::vec3 Pursue::Target()
 {
-	return glm::vec3(TargetPos() + m_pPhysicsComponent->GetVelocity() - AgentPos());
+	glm::vec3 v3FuturePos = TargetPos() + m_pPhysicsComponent->GetVelocity();
+	return glm::vec3(v3FuturePos - AgentPos());
 }
