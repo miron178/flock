@@ -22,6 +22,7 @@
 #include "Seek.h"
 #include "Flee.h"
 #include "Pursue.h"
+#include "Evade.h"
 #include "Wander.h"
 
 //STD
@@ -164,8 +165,11 @@ bool Scene::Initialise()
         //Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pPursue);
 
-        Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        pBrainComponent->AddBehaviour(0, pFlee);
+        //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(0, pFlee);
+
+        Evade* pEvade = new Evade(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        pBrainComponent->AddBehaviour(0, pEvade);
     }
 
     return true;

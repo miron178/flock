@@ -69,6 +69,8 @@ add_executable(Flock
 	src/Component.h
 	src/Entity.cpp
 	src/Entity.h
+	src/Evade.cpp
+	src/Evade.h
 	src/Flee.cpp
 	src/Flee.h
 	src/main.cpp
