@@ -38,6 +38,7 @@ private:
 	Camera* camera;
 	Model* m_pBoidModel;
 	Model* m_pLeaderModel;
+	Model* m_pContainmentModel;
 	Shader* ourShader;
 
 	float m_fLastX;
@@ -50,6 +51,7 @@ private:
 
 	glm::vec3 m_v3Target;
 	Entity* m_pTarget = nullptr;
+	Entity* m_pContainment = nullptr;
 };
 
 #endif // !SCENE_H

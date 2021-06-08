@@ -104,6 +104,7 @@ bool Scene::Initialise()
     //m_pNanosuitModel = new Model("models/nanosuit/nanosuit.obj");
     m_pBoidModel = new Model("models/boid/boid.obj");
     m_pLeaderModel = new Model("models/leader/leader.obj");
+    m_pContainmentModel = new Model("models/containment/containment.obj");
 
     //camera
     camera = new Camera(glm::vec3(0.0f, 2.0f, 8.0f));
@@ -111,34 +112,51 @@ bool Scene::Initialise()
     //seed randGen
     srand(static_cast<unsigned>(time(nullptr)));
 
+    //create containment entity
+    {
+        m_pContainment = new Entity();
+
+        //transform Component
+        TransformComponent* pTransformComponent = new TransformComponent(m_pContainment);
+        m_pContainment->AddComponent(pTransformComponent);
+
+        //model component
+        ModelComponent* pModelComponent = new ModelComponent(m_pContainment);
+        pModelComponent->SetModel(m_pContainmentModel);
+        pModelComponent->SetScale(0.08f);
+        m_pContainment->AddComponent(pModelComponent);
+    }
+
     //create target entity
-    m_pTarget = new Entity();
+    {
+        m_pTarget = new Entity();
 
-    //transform Component
-    TransformComponent* pTransformComponent = new TransformComponent(m_pTarget);
-    pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3(RandomFloatBetweenRange(0, 5),
-        0.0f,
-        RandomFloatBetweenRange(0, 5)));
-    m_pTarget->AddComponent(pTransformComponent);
+        //transform Component
+        TransformComponent* pTransformComponent = new TransformComponent(m_pTarget);
+        pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3(RandomFloatBetweenRange(0, 5),
+            0.0f,
+            RandomFloatBetweenRange(0, 5)));
+        m_pTarget->AddComponent(pTransformComponent);
 
-    //model component
-    ModelComponent* pModelComponent = new ModelComponent(m_pTarget);
-    pModelComponent->SetModel(m_pLeaderModel);
-    pModelComponent->SetScale(0.02f);
-    m_pTarget->AddComponent(pModelComponent);
+        //model component
+        ModelComponent* pModelComponent = new ModelComponent(m_pTarget);
+        pModelComponent->SetModel(m_pLeaderModel);
+        pModelComponent->SetScale(0.02f);
+        m_pTarget->AddComponent(pModelComponent);
 
-    //brain component
-    BrainComponent* pBrainComponent = new BrainComponent(m_pTarget);
-    m_pTarget->AddComponent(pBrainComponent);
+        //brain component
+        BrainComponent* pBrainComponent = new BrainComponent(m_pTarget);
+        m_pTarget->AddComponent(pBrainComponent);
 
-    //physics component
-    PhysicsComponent* pPhysicsComponent = new PhysicsComponent(m_pTarget);
-    m_pTarget->AddComponent(pPhysicsComponent);
+        //physics component
+        PhysicsComponent* pPhysicsComponent = new PhysicsComponent(m_pTarget);
+        m_pTarget->AddComponent(pPhysicsComponent);
 
-    Wander* pWander = new Wander(pTransformComponent, pPhysicsComponent);
-    pWander->SetMaxSpeed(2);
-    pWander->SetSpeed(2);
-    pBrainComponent->AddBehaviour(0, pWander);
+        Wander* pWander = new Wander(pTransformComponent, pPhysicsComponent);
+        pWander->SetMaxSpeed(2);
+        pWander->SetSpeed(2);
+        pBrainComponent->AddBehaviour(0, pWander);
+    }
 
     //create Entities
     for (int i = 0; i < NUM_OF_BOIDS; ++i)
@@ -263,6 +281,7 @@ void Scene::Deinitialise()
     delete ourShader;
     delete m_pBoidModel;
     delete m_pLeaderModel;
+    delete m_pContainmentModel;
 
     std::map<const unsigned int, Entity*>::const_iterator xIter;
     for (xIter = Entity::GetEntityMap().begin(); xIter != Entity::GetEntityMap().end(); ++xIter)
