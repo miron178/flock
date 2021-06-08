@@ -40,6 +40,6 @@ glm::vec3 Separation::Force()
 	{
 		v3Force /= uNeighbourCount;
 	}
-	return ClampForce(v3Force);
+	return v3Force * m_fScaleFactor;
 }
 

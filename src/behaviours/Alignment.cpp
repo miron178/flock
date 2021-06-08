@@ -30,6 +30,6 @@ glm::vec3 Alignment::Force()
 		v3Velocity /= uNeighbourCount;
 		v3Force = v3Velocity - AgentVelocity();
 	}
-	return ClampForce(v3Force);
+	return v3Force * m_fScaleFactor;
 }
 

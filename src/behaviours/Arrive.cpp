@@ -28,5 +28,5 @@ glm::vec3 Arrive::Force()
 		fMultiplier = fDistance / m_fRadius;
 	}
 	glm::vec3 v3DesiredVelocity = ClampVelocity(v3TargetDir * m_fSpeed * fMultiplier);
-	return ClampForce(v3DesiredVelocity - m_pPhysicsComponent->GetVelocity());
+	return (v3DesiredVelocity - m_pPhysicsComponent->GetVelocity()) * m_fScaleFactor;
 }

@@ -17,8 +17,9 @@ public:
 
 	void SetSpeed(float a_fSpeed) { m_fSpeed = a_fSpeed; }
 	void SetMaxSpeed(float a_fMaxSpeed) { m_fMaxSpeed = a_fMaxSpeed; }
-	void SetMaxForce(float a_fMaxForce) { m_fMaxForce = a_fMaxForce; }
 	void SetNeighbourRadius(float a_fNeighbourRadius) { m_fNeighbourRadius = a_fNeighbourRadius; }
+
+	void SetScaleFactor(float a_fScaleFactor) { m_fScaleFactor = a_fScaleFactor; }
 
 protected:
 	glm::vec3 AgentPos() const { return m_pAgent->GetEntityMatrixRow(POSITION_VECTOR); }
@@ -28,7 +29,6 @@ protected:
 
 	glm::vec3 Clamp(const glm::vec3& v3, float a_maxMagnitude) const;
 	glm::vec3 ClampVelocity(const glm::vec3& a_v3Velocity) const { return Clamp(a_v3Velocity, m_fMaxSpeed); }
-	glm::vec3 ClampForce(const glm::vec3& a_v3Force) const { return Clamp(a_v3Force, m_fMaxForce); }
 
 	glm::vec3 SphericalRand(float a_fRadius);
 
@@ -41,7 +41,7 @@ protected:
 
 	float m_fSpeed = 1.0f;
 	float m_fMaxSpeed = 1.0f;
-	float m_fMaxForce = 0.1f;
+	float m_fScaleFactor = 1.0f;
 	float m_fNeighbourRadius = 1.0f;
 };
 

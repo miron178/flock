@@ -184,11 +184,13 @@ bool Scene::Initialise()
         BrainComponent* pBrainComponent = new BrainComponent(pEntity);
         pEntity->AddComponent(pBrainComponent);
 
-        Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        pBrainComponent->AddBehaviour(0, pSeek);
+        //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(0, pSeek);
+        //pSeek->SetScaleFactor(0.5);
 
         //Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pPursue);
+        //pPursue->SetScaleFactor(0.5);
 
         //Wander* pWander = new Wander(pEntity->FindTransformComponent(), pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pWander);
@@ -197,20 +199,21 @@ bool Scene::Initialise()
         //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pFlee);
 
-        //Evade* pEvade = new Evade(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(0, pEvade);
+        Evade* pEvade = new Evade(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        pBrainComponent->AddBehaviour(0, pEvade);
+        pEvade->SetScaleFactor(0.5);
 
-        //Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
-        //pBrainComponent->AddBehaviour(1, pSeparation);
-        //pSeparation->SetMaxForce(0.5);
+        Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
+        pBrainComponent->AddBehaviour(1, pSeparation);
+        pSeparation->SetScaleFactor(0.5);
 
-        //Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
-        //pBrainComponent->AddBehaviour(2, pAlignment);
-        //pAlignment->SetMaxForce(1.0);
+        Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
+        pBrainComponent->AddBehaviour(2, pAlignment);
+        pAlignment->SetScaleFactor(0.1);
 
-        //Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
-        //pBrainComponent->AddBehaviour(3, pCohesion);
-        //pCohesion->SetMaxForce(1.0);
+        Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
+        pBrainComponent->AddBehaviour(3, pCohesion);
+        pCohesion->SetScaleFactor(0.2);
     }
 
     return true;
