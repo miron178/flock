@@ -25,11 +25,6 @@ public:
     void ClearBehaviours();
 
 private:
-    //flock
-    glm::vec3 CalculateSeporationForce();
-    glm::vec3 CalculateAlignmentForce();
-    glm::vec3 CalculateCohesionForce();
-
     //Variable
     std::map<unsigned, Behaviour*> m_behaviours;
 };
