@@ -27,7 +27,7 @@ glm::vec3 Behaviour::SphericalRand(float fRadius)
 
 bool Behaviour::IsNeighbour(const Entity* a_pSelf, const Entity* a_pOther) const
 {
-	if (a_pSelf != a_pOther)
+	if (a_pSelf != a_pOther && a_pOther->FindBrainComponent())
 	{
 		const TransformComponent* pTargetTransform = a_pOther->FindTransformComponent();
 		glm::vec3 v3Neighbour = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
