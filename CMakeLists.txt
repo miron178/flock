@@ -75,6 +75,8 @@ add_executable(Flock
 	src/TransformComponent.cpp
 	src/TransformComponent.h
 
+	src/behaviours/Alignment.cpp
+	src/behaviours/Alignment.h
 	src/behaviours/Arrive.cpp
 	src/behaviours/Arrive.h
 	src/behaviours/Behaviour.cpp

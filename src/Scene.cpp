@@ -24,7 +24,9 @@
 #include "Pursue.h"
 #include "Evade.h"
 #include "Wander.h"
+
 #include "Separation.h"
+#include "Alignment.h"
 
 //STD
 #include <iostream>
@@ -163,8 +165,12 @@ bool Scene::Initialise()
         //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pSeek);
 
-        Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        pBrainComponent->AddBehaviour(0, pPursue);
+        //Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(0, pPursue);
+
+        Wander* pWander = new Wander(pEntity->FindTransformComponent(), pPhysicsComponent);
+        pBrainComponent->AddBehaviour(0, pWander);
+        pWander->SetMaxForce(0.1);
 
         //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pFlee);
@@ -174,6 +180,11 @@ bool Scene::Initialise()
 
         Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(1, pSeparation);
+        pSeparation->SetMaxForce(0.5);
+
+        Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
+        pBrainComponent->AddBehaviour(2, pAlignment);
+        pAlignment->SetMaxForce(1.0);
     }
 
     return true;

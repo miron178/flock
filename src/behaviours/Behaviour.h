@@ -1,10 +1,10 @@
 #ifndef BEHAVIOUR_H
 #define BEHAVIOUR_H
 #include "TransformComponent.h"
+#include "PhysicsComponent.h"
 #include <glm/glm.hpp>
 #include <map>
 
-class PhysicsComponent;
 class Entity;
 
 class Behaviour
@@ -23,6 +23,7 @@ public:
 protected:
 	glm::vec3 AgentPos() const { return m_pAgent->GetEntityMatrixRow(POSITION_VECTOR); }
 	glm::vec3 AgentForward() const { return m_pAgent->GetEntityMatrixRow(FORWARD_VECTOR); }
+	glm::vec3 AgentVelocity() const { return m_pPhysicsComponent->GetVelocity(); }
 	glm::vec3 TargetPos() const { return *m_pTarget; }
 
 	glm::vec3 Clamp(const glm::vec3& v3, float a_maxMagnitude) const;
