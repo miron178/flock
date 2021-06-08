@@ -19,14 +19,16 @@
 #include "ModelComponent.h"
 #include "BrainComponent.h"
 #include "PhysicsComponent.h"
+
 #include "Seek.h"
 #include "Flee.h"
 #include "Pursue.h"
 #include "Evade.h"
 #include "Wander.h"
 
-#include "Separation.h"
 #include "Alignment.h"
+#include "Cohesion.h"
+#include "Separation.h"
 
 //STD
 #include <iostream>
@@ -185,6 +187,10 @@ bool Scene::Initialise()
         Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(2, pAlignment);
         pAlignment->SetMaxForce(1.0);
+
+        Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
+        pBrainComponent->AddBehaviour(3, pCohesion);
+        pCohesion->SetMaxForce(1.0);
     }
 
     return true;

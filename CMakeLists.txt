@@ -75,12 +75,13 @@ add_executable(Flock
 	src/TransformComponent.cpp
 	src/TransformComponent.h
 
-	src/behaviours/Alignment.cpp
-	src/behaviours/Alignment.h
-	src/behaviours/Arrive.cpp
-	src/behaviours/Arrive.h
+	#base
 	src/behaviours/Behaviour.cpp
 	src/behaviours/Behaviour.h
+
+	# steering
+	src/behaviours/Arrive.cpp
+	src/behaviours/Arrive.h
 	src/behaviours/Evade.cpp
 	src/behaviours/Evade.h
 	src/behaviours/Flee.cpp
@@ -89,10 +90,16 @@ add_executable(Flock
 	src/behaviours/Pursue.h
 	src/behaviours/Seek.cpp
 	src/behaviours/Seek.h
-	src/behaviours/Separation.cpp
-	src/behaviours/Separation.h
 	src/behaviours/Wander.cpp
 	src/behaviours/Wander.h
+
+	#flocking
+	src/behaviours/Alignment.cpp
+	src/behaviours/Alignment.h
+	src/behaviours/Cohesion.cpp
+	src/behaviours/Cohesion.h
+	src/behaviours/Separation.cpp
+	src/behaviours/Separation.h
 )
 
 if (MSVC)
