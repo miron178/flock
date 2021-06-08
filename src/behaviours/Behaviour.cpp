@@ -24,3 +24,18 @@ glm::vec3 Behaviour::SphericalRand(float fRadius)
 #endif
 	return v3RandomPointOnSphere;
 }
+
+bool Behaviour::IsNeighbour(const Entity* a_pSelf, const Entity* a_pOther) const
+{
+	if (a_pSelf != a_pOther)
+	{
+		const TransformComponent* pTargetTransform = a_pOther->FindTransformComponent();
+		glm::vec3 v3Neighbour = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
+		float fDistanceSquared = glm::distance2(v3Neighbour, AgentPos());
+		if (fDistanceSquared <= m_fNeighbourRadius * m_fNeighbourRadius)
+		{
+			return true;
+		}
+	}
+	return false;
+}

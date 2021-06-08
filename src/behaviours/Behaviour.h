@@ -31,32 +31,7 @@ protected:
 
 	glm::vec3 SphericalRand(float a_fRadius);
 
-	template<typename Visitor> 
-	unsigned ForEachNeighbour(const Entity* a_pSelf, const std::map<const unsigned int, Entity*>& a_xEntityMap, Visitor visitor)
-	{
-		std::map<const unsigned int, Entity*>::const_iterator xConstIter;
-		float fRadiusSquared = m_fNeighbourRadius * m_fNeighbourRadius;
-		unsigned int uNeighbourCount = 0;
-
-		//loop over entities
-		for (const auto xConstIter : a_xEntityMap)
-		{
-			const Entity* pNeighbour = xConstIter.second;
-
-			if (a_pSelf != pNeighbour)
-			{
-				const TransformComponent* pTargetTransform = pNeighbour->FindTransformComponent();
-				glm::vec3 v3Neighbour = pTargetTransform->GetEntityMatrixRow(POSITION_VECTOR);
-				float fDistanceSquared = glm::distance2(v3Neighbour, AgentPos());
-				if (fDistanceSquared <= fRadiusSquared)
-				{
-					visitor(pNeighbour);
-					uNeighbourCount++;
-				}
-			}
-		}
-		return uNeighbourCount;
-	}
+	bool IsNeighbour(const Entity* a_pSelf, const Entity* a_pOther) const;
 
 protected:
 	const TransformComponent* m_pAgent;
