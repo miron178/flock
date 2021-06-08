@@ -101,7 +101,9 @@ bool Scene::Initialise()
     ourShader = new Shader("shaders/model_loading.vs", "shaders/model_loading.fs");
 
     // load models
-    m_pNanosuitModel= new Model("models/nanosuit/nanosuit.obj");
+    //m_pNanosuitModel = new Model("models/nanosuit/nanosuit.obj");
+    m_pBoidModel = new Model("models/boid/boid.obj");
+    m_pLeaderModel = new Model("models/leader/leader.obj");
 
     //camera
     camera = new Camera(glm::vec3(0.0f, 2.0f, 8.0f));
@@ -121,7 +123,7 @@ bool Scene::Initialise()
 
     //model component
     ModelComponent* pModelComponent = new ModelComponent(m_pTarget);
-    pModelComponent->SetModel(m_pNanosuitModel);
+    pModelComponent->SetModel(m_pLeaderModel);
     pModelComponent->SetScale(0.02f);
     m_pTarget->AddComponent(pModelComponent);
 
@@ -152,7 +154,7 @@ bool Scene::Initialise()
 
         //model component
         ModelComponent* pModelComponent = new ModelComponent(pEntity);
-        pModelComponent->SetModel(m_pNanosuitModel);
+        pModelComponent->SetModel(m_pBoidModel);
         pModelComponent->SetScale(0.02f);
         pEntity->AddComponent(pModelComponent);
 
@@ -164,15 +166,15 @@ bool Scene::Initialise()
         BrainComponent* pBrainComponent = new BrainComponent(pEntity);
         pEntity->AddComponent(pBrainComponent);
 
-        //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(0, pSeek);
+        Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        pBrainComponent->AddBehaviour(0, pSeek);
 
         //Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pPursue);
 
-        Wander* pWander = new Wander(pEntity->FindTransformComponent(), pPhysicsComponent);
-        pBrainComponent->AddBehaviour(0, pWander);
-        pWander->SetMaxForce(0.1);
+        //Wander* pWander = new Wander(pEntity->FindTransformComponent(), pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(0, pWander);
+        //pWander->SetMaxForce(0.1);
 
         //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pFlee);
@@ -180,17 +182,17 @@ bool Scene::Initialise()
         //Evade* pEvade = new Evade(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pEvade);
 
-        Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
-        pBrainComponent->AddBehaviour(1, pSeparation);
-        pSeparation->SetMaxForce(0.5);
+        //Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
+        //pBrainComponent->AddBehaviour(1, pSeparation);
+        //pSeparation->SetMaxForce(0.5);
 
-        Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
-        pBrainComponent->AddBehaviour(2, pAlignment);
-        pAlignment->SetMaxForce(1.0);
+        //Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
+        //pBrainComponent->AddBehaviour(2, pAlignment);
+        //pAlignment->SetMaxForce(1.0);
 
-        Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
-        pBrainComponent->AddBehaviour(3, pCohesion);
-        pCohesion->SetMaxForce(1.0);
+        //Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
+        //pBrainComponent->AddBehaviour(3, pCohesion);
+        //pCohesion->SetMaxForce(1.0);
     }
 
     return true;
@@ -259,7 +261,8 @@ void Scene::Deinitialise()
 {
     delete camera;
     delete ourShader;
-    delete m_pNanosuitModel;
+    delete m_pBoidModel;
+    delete m_pLeaderModel;
 
     std::map<const unsigned int, Entity*>::const_iterator xIter;
     for (xIter = Entity::GetEntityMap().begin(); xIter != Entity::GetEntityMap().end(); ++xIter)

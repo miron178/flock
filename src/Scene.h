@@ -36,7 +36,8 @@ private:
 	
 	GLFWwindow* window;
 	Camera* camera;
-	Model* m_pNanosuitModel;
+	Model* m_pBoidModel;
+	Model* m_pLeaderModel;
 	Shader* ourShader;
 
 	float m_fLastX;
