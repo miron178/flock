@@ -27,7 +27,7 @@ void PhysicsComponent::Update(float a_fDeltaTime)
 		m_v3Velocity = glm::normalize(m_v3Velocity) * m_fMaxVelocity;
 	}
 
-	m_v3Velocity = glm::clamp(m_v3Velocity, glm::vec3(-10.0f, 0.0f, -10.0f), glm::vec3(10.0f, 0.0f, 10.0f));
+	m_v3Velocity = glm::clamp(m_v3Velocity, glm::vec3(-10.0f, -10.0f, -10.0f), glm::vec3(10.0f, 10.0f, 10.0f));
 	v3Position += m_v3Velocity * a_fDeltaTime;
 	v3Forward = m_v3Velocity;
 	if (glm::length(v3Forward) > 0.0f)

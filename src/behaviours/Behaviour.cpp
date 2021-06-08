@@ -1,7 +1,7 @@
 #include "Behaviour.h"
 #include "Entity.h"
 
-#define FLAT
+//#define FLAT
 
 Behaviour::Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent)
 	: m_pAgent(a_pAgent)
