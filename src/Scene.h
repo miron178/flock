@@ -78,11 +78,11 @@ private:
 	float m_fBoidScale = 0.02f;
 	
 	float m_fBoidMass = 1.0f;
-	float m_fBoidMaxForce = 10.0f;
+	float m_fBoidMaxForce = 2.0f;
 	float m_fBoidMaxVelocity = 10.0f;
 
-	float m_fBoidAvoidScaleFactor = 0.08f;
-	float m_fBoidAvoidRayLength = 1.0f;
+	float m_fBoidAvoidScaleFactor = 1.0f;
+	float m_fBoidAvoidRayLength = 2.0f;
 
 	int m_eBoidSteering = static_cast<int>(Steering::Pursue);
 
