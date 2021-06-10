@@ -35,6 +35,7 @@ private:
 	int RandomNumberBetweenRange(int a_iLowerRange, int a_iUpperRange);
 	float RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange);
 
+	void ToggleGui();
 	void Gui();
 
 	GLFWwindow* window;
@@ -57,6 +58,9 @@ private:
 	Entity* m_pTarget = nullptr;
 
 	std::vector<const Entity*> m_vAvoid;
+
+	bool m_bEscReleased = true;
+	bool m_bShowGui = true;
 };
 
 #endif // !SCENE_H

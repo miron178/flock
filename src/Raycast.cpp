@@ -14,8 +14,6 @@ bool Raycast::Hit(glm::vec3 const& a_v3Orig, glm::vec3 const& a_v3Dir, float a_f
 	glm::vec2 v2BaryPosition;
 	bool bHit = glm::intersectRayTriangle(a_v3Orig, a_v3Dir, a_v3Vert0, a_v3Vert1, a_v3Vert2, v2BaryPosition, a_fDistance);
 
-	if (bHit && a_fDistance > 0)
-		printf("hit %f\n", a_fDistance);
 
 	if (bHit && a_fDistance >= 0 && a_fDistance < a_fMaxDistance)
 	{

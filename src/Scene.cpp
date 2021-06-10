@@ -87,11 +87,9 @@ bool Scene::Initialise()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
 
-    // tell GLFW to capture our mouse - don't so that Dear ImGUI can work
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     // glad: load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -156,7 +154,7 @@ bool Scene::Initialise()
         pEntity->AddComponent(pTransformComponent);
         pModelComponent = new ModelComponent(pEntity);
         pModelComponent->SetModel(m_pAvoidModel);
-        pModelComponent->SetScale(0.01f);
+        pModelComponent->SetScale(0.004f);
         pEntity->AddComponent(pModelComponent);
 
         m_vAvoid.push_back(pEntity);
@@ -188,15 +186,16 @@ bool Scene::Initialise()
         PhysicsComponent* pPhysicsComponent = new PhysicsComponent(m_pTarget);
         m_pTarget->AddComponent(pPhysicsComponent);
 
+        Avoid* pAvoid = new Avoid(m_pTarget, m_vAvoid);
+        pBrainComponent->AddBehaviour(0, pAvoid);
+        pAvoid->SetScaleFactor(0.8f);
+
         Wander* pWander = new Wander(m_pTarget);
         pWander->SetMaxSpeed(2);
         pWander->SetSpeed(2);
-        pBrainComponent->AddBehaviour(0, pWander);
-        pWander->SetScaleFactor(0.4f);
+        pBrainComponent->AddBehaviour(1, pWander);
+        pWander->SetScaleFactor(0.2f);
 
-        Avoid* pAvoid = new Avoid(m_pTarget, m_vAvoid);
-        pBrainComponent->AddBehaviour(1, pAvoid);
-        pAvoid->SetScaleFactor(0.8f);
     }
 
     //create Entities
@@ -274,7 +273,20 @@ bool Scene::Update()
     fLastFrame = currentFrame;
 
     // input
-    camera->processInput(window, fDeltaTime);
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && m_bEscReleased)
+    { 
+        m_bEscReleased = false;
+        ToggleGui();
+    }
+    else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE)
+    {
+        m_bEscReleased = true;
+    }
+
+    if (!m_bShowGui) 
+    {
+        camera->processInput(window, fDeltaTime);
+    }
 
     //update entities
     std::map<const unsigned int, Entity*>::const_iterator xIter;
@@ -321,7 +333,10 @@ void Scene::Render()
     }
 
     // add GUI
-    Gui();
+    if (m_bShowGui)
+    {
+        Gui();
+    }
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     glfwSwapBuffers(window);
@@ -411,7 +426,23 @@ float Scene::RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange)
 }
 
 
-bool show_demo_window = true; //TODO: delete me!
+void Scene::ToggleGui()
+{
+    m_bShowGui = !m_bShowGui;
+
+    if (m_bShowGui)
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetCursorPosCallback(window, nullptr);
+        glfwSetScrollCallback(window, nullptr);
+    }
+    else
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPosCallback(window, mouse_callback);
+        glfwSetScrollCallback(window, scroll_callback);
+    }
+}
 
 void Scene::Gui()
 {
@@ -421,8 +452,58 @@ void Scene::Gui()
     ImGui::NewFrame();
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (show_demo_window)
-        ImGui::ShowDemoWindow(&show_demo_window);
+    //if (show_demo_window)
+    //    ImGui::ShowDemoWindow(&show_demo_window);
+
+    bool open = true;
+    if (!ImGui::Begin("Settings", &open, ImGuiWindowFlags_NoCollapse) || !open)
+    {
+        // Early out if the window is collapsed, as an optimization.
+        ImGui::End();
+        ImGui::EndFrame();
+        ToggleGui();
+        return;
+    }
+
+    if (ImGui::CollapsingHeader("Target", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Text("Tweak behaviour of the target boid");
+        if (ImGui::CollapsingHeader("Physics", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            PhysicsComponent* pPhysics = m_pTarget->FindPhysicsComponent();
+            ImGui::SliderFloat("mass", &pPhysics->m_fMass, 0.1f, 10.0f, "%.3f");
+            ImGui::SliderFloat("max force", &pPhysics->m_fMaxForce, 1.0f, 20.0f, "%.1f");
+            ImGui::SliderFloat("max velocity", &pPhysics->m_fMaxVelocity, 1.0f, 20.0f, "%.1f");
+        }
+
+        BrainComponent* pBrain = m_pTarget->FindBrainComponent();
+        if (ImGui::CollapsingHeader("Avoid", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            Behaviour* pBehaviour = pBrain->GetBehaviour(0);
+            ImGui::SliderFloat("scale factor##avoid", &pBehaviour->m_fScaleFactor, 0.1f, 10.0f, "%.3f");
+
+            Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
+        }
+        if (ImGui::CollapsingHeader("Wander", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            Behaviour* pBehaviour = pBrain->GetBehaviour(1);
+            ImGui::SliderFloat("scale factor##wander", &pBehaviour->m_fScaleFactor, 0.1f, 10.0f, "%.3f");
+
+            Wander* pWander = reinterpret_cast<Wander*>(pBehaviour);
+            ImGui::SliderFloat("distance", &pWander->m_fDistance, 0.2f, 10.0f, "%.3f");
+            ImGui::SliderFloat("radius", &pWander->m_fRadius, 0.1f, pWander->m_fDistance - 0.1, "%.3f");
+            ImGui::SliderFloat("jitter", &pWander->m_fJitter, 0.0f, pWander->m_fRadius, "%.3f");
+        }
+    }
+
+    ImGui::Separator();
+    ImGui::Text("Exit the simulation");
+    if (ImGui::Button("Exit"))
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
+
+    ImGui::End();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

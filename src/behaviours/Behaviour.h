@@ -22,6 +22,12 @@ public:
 
 	void SetScaleFactor(float a_fScaleFactor) { m_fScaleFactor = a_fScaleFactor; }
 
+	//public params
+	float m_fSpeed = 1.0f;
+	float m_fMaxSpeed = 1.0f;
+	float m_fScaleFactor = 1.0f;
+	float m_fNeighbourRadius = 1.0f;
+
 protected:
 	glm::vec3 AgentPos() const;
 	glm::vec3 AgentForward() const;
@@ -42,11 +48,6 @@ protected:
 	const ModelComponent* m_pModelComponent;
 
 	const glm::vec3* m_pTarget;
-
-	float m_fSpeed = 1.0f;
-	float m_fMaxSpeed = 1.0f;
-	float m_fScaleFactor = 1.0f;
-	float m_fNeighbourRadius = 1.0f;
 };
 
 #endif //BEHAVIOUR_H

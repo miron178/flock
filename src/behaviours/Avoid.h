@@ -12,9 +12,11 @@ public:
 
     virtual glm::vec3 Force() override;
 
+	//public params
+    float m_fRayLength = 1.0f;
+
 private:
     const std::vector<const Entity*>& m_vAvoid;
-    float m_fRayLength = 1.0f;
 };
 
 #endif 

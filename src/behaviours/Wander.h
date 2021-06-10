@@ -10,13 +10,15 @@ public:
     virtual ~Wander() = default;
     virtual glm::vec3 Force() override;
 
+    //public params
+    float m_fDistance = 1.0f;
+    float m_fRadius = 0.8f;
+    float m_fJitter = 0.4f;
+
 private:
     glm::vec3 m_v3Direction;
     glm::vec3 m_v3Target;
 
-    float m_fDistance = 1.0f;
-    float m_fRadius = 0.8f;
-    float m_fJitter = 0.4f;
 };
 
 #endif //WANDER_H
