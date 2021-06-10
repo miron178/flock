@@ -188,13 +188,13 @@ bool Scene::Initialise()
 
         Avoid* pAvoid = new Avoid(m_pTarget, m_vAvoid);
         pBrainComponent->AddBehaviour(0, pAvoid);
-        pAvoid->SetScaleFactor(0.8f);
+        pAvoid->m_fScaleFactor = 0.8f;
 
         Wander* pWander = new Wander(m_pTarget);
-        pWander->SetMaxSpeed(2);
-        pWander->SetSpeed(2);
+        pWander->m_fMaxSpeed = 2;
+        pWander->m_fSpeed = 2;
         pBrainComponent->AddBehaviour(1, pWander);
-        pWander->SetScaleFactor(0.2f);
+        pWander->m_fScaleFactor = 0.2f;
 
     }
 
@@ -228,24 +228,21 @@ bool Scene::Initialise()
 
         Avoid* pAvoid = new Avoid(pEntity, m_vAvoid);
         pBrainComponent->AddBehaviour(0, pAvoid);
-        pAvoid->SetScaleFactor(0.8f);
+        pAvoid->m_fScaleFactor = 0.8f;
 
         UpdateBoidSteering(pEntity);
-        //Pursue* pPursue = new Pursue(pEntity, &m_v3Target);
-        //pBrainComponent->AddBehaviour(1, pPursue);
-        //pPursue->SetScaleFactor(0.5);
 
         Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(2, pSeparation);
-        pSeparation->SetScaleFactor(0.5f);
+        pSeparation->m_fScaleFactor = m_fBoidSeparationScaleFactor;
 
         Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(3, pAlignment);
-        pAlignment->SetScaleFactor(0.1f);
+        pAlignment->m_fScaleFactor = m_fBoidAlignmentScaleFactor;
 
         Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(4, pCohesion);
-        pCohesion->SetScaleFactor(0.2f);
+        pCohesion->m_fScaleFactor = m_fBoidCohesionScaleFactor;
 
         m_vBoids.push_back(pEntity);
     }
@@ -423,7 +420,7 @@ void Scene::UpdateBoidSteering(Entity* a_pBoid)
     {
         Arrive* pArrive = new Arrive(a_pBoid, &m_v3Target);
         Behaviour* pOld = pBrainComponent->AddBehaviour(1, pArrive);
-        pArrive->SetScaleFactor(m_fBoidArriveScaleFactor);
+        pArrive->m_fScaleFactor = m_fBoidArriveScaleFactor;
         delete pOld;
         break;
     }
@@ -431,7 +428,7 @@ void Scene::UpdateBoidSteering(Entity* a_pBoid)
     {
         Flee* pFlee = new Flee(a_pBoid, &m_v3Target);
         Behaviour* pOld = pBrainComponent->AddBehaviour(1, pFlee);
-        pFlee->SetScaleFactor(m_fBoidFleeScaleFactor);
+        pFlee->m_fScaleFactor = m_fBoidFleeScaleFactor;
         delete pOld;
         break;
     }
@@ -439,7 +436,7 @@ void Scene::UpdateBoidSteering(Entity* a_pBoid)
     {
         Seek* pSeek = new Seek(a_pBoid, &m_v3Target);
         Behaviour* pOld = pBrainComponent->AddBehaviour(1, pSeek);
-        pSeek->SetScaleFactor(m_fBoidSeekScaleFactor);
+        pSeek->m_fScaleFactor = m_fBoidSeekScaleFactor;
         delete pOld;
         break;
     }
@@ -447,7 +444,7 @@ void Scene::UpdateBoidSteering(Entity* a_pBoid)
     {
         Pursue* pPursue = new Pursue(a_pBoid, &m_v3Target);
         Behaviour* pOld = pBrainComponent->AddBehaviour(1, pPursue);
-        pPursue->SetScaleFactor(m_fBoidPursueScaleFactor);
+        pPursue->m_fScaleFactor = m_fBoidPursueScaleFactor;
         delete pOld;
         break;
     }
@@ -455,7 +452,7 @@ void Scene::UpdateBoidSteering(Entity* a_pBoid)
     {
         Wander* pWander = new Wander(a_pBoid);
         Behaviour* pOld = pBrainComponent->AddBehaviour(1, pWander);
-        pWander->SetScaleFactor(m_fBoidWanderScaleFactor);
+        pWander->m_fScaleFactor = m_fBoidWanderScaleFactor;
         delete pOld;
         break;
     }

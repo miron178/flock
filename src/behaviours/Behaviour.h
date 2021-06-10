@@ -16,12 +16,6 @@ public:
 
 	virtual glm::vec3 Force() = 0;
 
-	void SetSpeed(float a_fSpeed) { m_fSpeed = a_fSpeed; }
-	void SetMaxSpeed(float a_fMaxSpeed) { m_fMaxSpeed = a_fMaxSpeed; }
-	void SetNeighbourRadius(float a_fNeighbourRadius) { m_fNeighbourRadius = a_fNeighbourRadius; }
-
-	void SetScaleFactor(float a_fScaleFactor) { m_fScaleFactor = a_fScaleFactor; }
-
 	//public params
 	float m_fSpeed = 1.0f;
 	float m_fMaxSpeed = 1.0f;

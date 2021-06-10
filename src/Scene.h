@@ -93,8 +93,8 @@ private:
 	float m_fBoidWanderScaleFactor = 0.5f;
 
 	float m_fBoidSeparationScaleFactor = 0.5f;
-	float m_fBoidAlignmentScaleFactor = 0.5f;
-	float m_fBoidCohesionScaleFactor = 0.5f;
+	float m_fBoidAlignmentScaleFactor = 0.1f;
+	float m_fBoidCohesionScaleFactor = 0.2;
 };
 
 #endif // !SCENE_H
