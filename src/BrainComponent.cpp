@@ -29,9 +29,21 @@ void BrainComponent::Update(float a_fDeltaTime)
 	if (!pPhysicsComponent) return;
 
 	//calculate forces
+	float fTotalMagnitude = 0;
 	for (auto item : m_behaviours)
 	{
-		pPhysicsComponent->AddForce(item.second->Force());
+		glm::vec3 v3Force = item.second->Force();
+		float fMagnitude = glm::length(v3Force);
+
+		if (fTotalMagnitude + fMagnitude < m_fMaxForce)
+		{
+			pPhysicsComponent->AddForce(v3Force);
+			fTotalMagnitude += fMagnitude;
+		}
+		else
+		{
+			break;
+		}
 	}
 }
 

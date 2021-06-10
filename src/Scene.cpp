@@ -204,40 +204,41 @@ bool Scene::Initialise()
         BrainComponent* pBrainComponent = new BrainComponent(pEntity);
         pEntity->AddComponent(pBrainComponent);
 
-        //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(0, pSeek);
-        //pSeek->SetScaleFactor(0.5);
+
+        Avoid* pAvoid = new Avoid(pEntity, m_vAvoid);
+        pBrainComponent->AddBehaviour(0, pAvoid);
+        pAvoid->SetScaleFactor(0.8f);
 
         Pursue* pPursue = new Pursue(pEntity, &m_v3Target);
-        pBrainComponent->AddBehaviour(0, pPursue);
+        pBrainComponent->AddBehaviour(1, pPursue);
         pPursue->SetScaleFactor(0.5);
 
+        //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
+        //pBrainComponent->AddBehaviour(1, pSeek);
+        //pSeek->SetScaleFactor(0.5);
+
         //Wander* pWander = new Wander(pEntity->FindTransformComponent(), pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(0, pWander);
+        //pBrainComponent->AddBehaviour(1, pWander);
         //pWander->SetMaxForce(0.1);
 
         //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(0, pFlee);
+        //pBrainComponent->AddBehaviour(1, pFlee);
 
         //Evade* pEvade = new Evade(pEntity, &m_v3Target);
-        //pBrainComponent->AddBehaviour(0, pEvade);
+        //pBrainComponent->AddBehaviour(1, pEvade);
         //pEvade->SetScaleFactor(0.5f);
 
         Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
-        pBrainComponent->AddBehaviour(1, pSeparation);
+        pBrainComponent->AddBehaviour(2, pSeparation);
         pSeparation->SetScaleFactor(0.5f);
 
         Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
-        pBrainComponent->AddBehaviour(2, pAlignment);
+        pBrainComponent->AddBehaviour(3, pAlignment);
         pAlignment->SetScaleFactor(0.1f);
 
         Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
-        pBrainComponent->AddBehaviour(3, pCohesion);
+        pBrainComponent->AddBehaviour(4, pCohesion);
         pCohesion->SetScaleFactor(0.2f);
-
-        Avoid* pAvoid = new Avoid(pEntity, m_vAvoid);
-        pBrainComponent->AddBehaviour(4, pAvoid);
-        pAvoid->SetScaleFactor(0.8f);
     }
 
     return true;

@@ -27,6 +27,7 @@ public:
 private:
     //Variable
     std::map<unsigned, Behaviour*> m_behaviours;
+    float m_fMaxForce = 1.0f;
 };
 
 #endif
