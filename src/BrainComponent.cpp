@@ -57,10 +57,7 @@ Behaviour* BrainComponent::AddBehaviour(unsigned a_priority, Behaviour* a_pBehav
 	{
 		pPrev = previous->second;
 	}
-	else
-	{
-		m_behaviours[a_priority] = a_pBehaviour;
-	}
+	m_behaviours[a_priority] = a_pBehaviour;
 	return pPrev;
 }
 
