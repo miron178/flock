@@ -523,7 +523,7 @@ void Scene::Gui()
         BrainComponent* pBrain = m_pTarget->FindBrainComponent();
         if (ImGui::CollapsingHeader("Avoid", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            Behaviour* pBehaviour = pBrain->GetBehaviour(0);
+            Behaviour* pBehaviour = pBrain->GetBehaviour(static_cast<unsigned>(SteeringPriority::Avoid));
             ImGui::SliderFloat("avoid scale factor##target", &pBehaviour->m_fScaleFactor, 0.0f, 2.0f, "%.3f");
 
             Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
@@ -531,7 +531,7 @@ void Scene::Gui()
         }
         if (ImGui::CollapsingHeader("Wander", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            Behaviour* pBehaviour = pBrain->GetBehaviour(1);
+            Behaviour* pBehaviour = pBrain->GetBehaviour(static_cast<unsigned>(SteeringPriority::Steering));
             ImGui::SliderFloat("wander scale factor##target", &pBehaviour->m_fScaleFactor, 0.0f, 2.0f, "%.3f");
 
             Wander* pWander = reinterpret_cast<Wander*>(pBehaviour);
@@ -631,13 +631,13 @@ void Scene::Gui()
                 BrainComponent* pBrain = boid->FindBrainComponent();
                 pBrain->m_fMaxForce = m_fBoidMaxForce; //same as physics
 
-                Behaviour* pBehaviour = pBrain->GetBehaviour(0);
+                Behaviour* pBehaviour = pBrain->GetBehaviour(static_cast<unsigned>(SteeringPriority::Avoid));
                 pBehaviour->m_fScaleFactor = m_fBoidAvoidScaleFactor;
                 Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
                 pAvoid->m_fRayLength = m_fBoidAvoidRayLength;
 
                 UpdateBoidSteering(boid);
-                pBehaviour = pBrain->GetBehaviour(1);
+                pBehaviour = pBrain->GetBehaviour(static_cast<unsigned>(SteeringPriority::Steering));
 
                 switch (static_cast<Steering>(m_eBoidSteering))
                 {
@@ -680,15 +680,15 @@ void Scene::Gui()
                 }
                 }
 
-                pBehaviour = pBrain->GetBehaviour(2);
+                pBehaviour = pBrain->GetBehaviour(static_cast<unsigned>(SteeringPriority::Separation));
                 pBehaviour->m_fScaleFactor = m_fBoidSeparationScaleFactor;
                 pBehaviour->m_fNeighbourRadius = m_fBoidSeparationNeighbourRadius;
 
-                pBehaviour = pBrain->GetBehaviour(3);
+                pBehaviour = pBrain->GetBehaviour(static_cast<unsigned>(SteeringPriority::Alignment));
                 pBehaviour->m_fScaleFactor = m_fBoidAlignmentNeighbourRadius;
                 pBehaviour->m_fNeighbourRadius = m_fBoidAlignmentScaleFactor;
 
-                pBehaviour = pBrain->GetBehaviour(4);
+                pBehaviour = pBrain->GetBehaviour(static_cast<unsigned>(SteeringPriority::Cohesion));
                 pBehaviour->m_fScaleFactor = m_fBoidCohesionScaleFactor;
                 pBehaviour->m_fNeighbourRadius = m_fBoidCohesionNeighbourRadius;
             }

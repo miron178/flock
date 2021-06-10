@@ -35,6 +35,15 @@ private:
 	int RandomNumberBetweenRange(int a_iLowerRange, int a_iUpperRange);
 	float RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange);
 
+	enum class SteeringPriority
+	{
+		Avoid,
+		Steering, //one of the options below
+		Separation,
+		Alignment,
+		Cohesion
+	};
+
 	enum class Steering
 	{
 		Arrive,
