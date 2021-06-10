@@ -64,8 +64,17 @@ private:
 
 	std::vector<const Entity*> m_vBoids;
 	float m_fBoidScale = 0.02f;
+	
+	float m_fBoidMass = 1.0f;
+	float m_fBoidMaxForce = 10.0f;
+	float m_fBoidMaxVelocity = 10.0f;
+
 	float m_fBoidAvoidScaleFactor = 0.08f;
 	float m_fBoidAvoidRayLength = 1.0f;
+
+	float m_fBoidSeparationScaleFactor = 0.05f;
+	float m_fBoidAlignmentScaleFactor = 0.05f;
+	float m_fBoidCohesionScaleFactor = 0.05f;
 };
 
 #endif // !SCENE_H

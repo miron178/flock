@@ -485,66 +485,88 @@ void Scene::Gui()
         if (ImGui::CollapsingHeader("Physics", ImGuiTreeNodeFlags_DefaultOpen))
         {
             PhysicsComponent* pPhysics = m_pTarget->FindPhysicsComponent();
-            ImGui::SliderFloat("mass", &pPhysics->m_fMass, 0.1f, 10.0f, "%.3f");
-            ImGui::SliderFloat("max force", &pPhysics->m_fMaxForce, 1.0f, 20.0f, "%.1f");
-            ImGui::SliderFloat("max velocity", &pPhysics->m_fMaxVelocity, 1.0f, 20.0f, "%.1f");
-    
+            ImGui::SliderFloat("target mass", &pPhysics->m_fMass, 0.1f, 10.0f, "%.3f");
+            ImGui::SliderFloat("tartet max force", &pPhysics->m_fMaxForce, 1.0f, 20.0f, "%.1f");
+            ImGui::SliderFloat("target max velocity", &pPhysics->m_fMaxVelocity, 1.0f, 20.0f, "%.1f");
         }
 
         BrainComponent* pBrain = m_pTarget->FindBrainComponent();
         if (ImGui::CollapsingHeader("Avoid", ImGuiTreeNodeFlags_DefaultOpen))
         {
             Behaviour* pBehaviour = pBrain->GetBehaviour(0);
-            ImGui::SliderFloat("scale factor##avoid", &pBehaviour->m_fScaleFactor, 0.1f, 10.0f, "%.3f");
+            ImGui::SliderFloat("avoid scale factor##target", &pBehaviour->m_fScaleFactor, 0.0f, 2.0f, "%.3f");
 
             Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
-            ImGui::SliderFloat("ray length##avoid", &pAvoid->m_fRayLength, 0.5f, 10.0f, "%.3f");
+            ImGui::SliderFloat("avoid ray length##target", &pAvoid->m_fRayLength, 0.5f, 10.0f, "%.3f");
         }
         if (ImGui::CollapsingHeader("Wander", ImGuiTreeNodeFlags_DefaultOpen))
         {
             Behaviour* pBehaviour = pBrain->GetBehaviour(1);
-            ImGui::SliderFloat("scale factor##wander", &pBehaviour->m_fScaleFactor, 0.1f, 10.0f, "%.3f");
+            ImGui::SliderFloat("wander scale factor##target", &pBehaviour->m_fScaleFactor, 0.0f, 2.0f, "%.3f");
 
             Wander* pWander = reinterpret_cast<Wander*>(pBehaviour);
-            ImGui::SliderFloat("distance", &pWander->m_fDistance, 0.2f, 10.0f, "%.3f");
-            ImGui::SliderFloat("radius", &pWander->m_fRadius, 0.1f, pWander->m_fDistance - 0.1, "%.3f");
-            ImGui::SliderFloat("jitter", &pWander->m_fJitter, 0.0f, pWander->m_fRadius, "%.3f");
+            ImGui::SliderFloat("wander distance#target", &pWander->m_fDistance, 0.2f, 10.0f, "%.3f");
+            ImGui::SliderFloat("wander radius#target", &pWander->m_fRadius, 0.1f, pWander->m_fDistance - 0.1, "%.3f");
+            ImGui::SliderFloat("wander jitter#target", &pWander->m_fJitter, 0.0f, pWander->m_fRadius, "%.3f");
         }
     }
 
     if (ImGui::CollapsingHeader("Flock", ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::Text("Tweak behaviour of the flock");
+        bool bUpdate = false;
+        bUpdate = ImGui::SliderFloat("boid scale", &m_fBoidScale, 0.01f, 0.05f, "%.3f") || bUpdate;
+        if (ImGui::CollapsingHeader("Physics", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            PhysicsComponent* pPhysics = m_pTarget->FindPhysicsComponent();
+            bUpdate = ImGui::SliderFloat("boid mass", &m_fBoidMass, 0.1f, 10.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("boid max force", &m_fBoidMaxForce, 1.0f, 20.0f, "%.1f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("boid max velocity", &m_fBoidMaxVelocity, 1.0f, 20.0f, "%.1f") || bUpdate;
+        }
+        if (ImGui::CollapsingHeader("avoid", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            bUpdate = ImGui::SliderFloat("avoid scale factor#boid", &m_fBoidAvoidScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("avoid ray length#boid", &m_fBoidAvoidRayLength, 0.5f, 10.0f, "%.3f") || bUpdate;
+        }
+        if (ImGui::CollapsingHeader("separation", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            bUpdate = ImGui::SliderFloat("separation scale factor#boid", &m_fBoidSeparationScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+        }
+        if (ImGui::CollapsingHeader("alignment", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            bUpdate = ImGui::SliderFloat("alignment scale factor#boid", &m_fBoidAlignmentScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+        }
+        if (ImGui::CollapsingHeader("cohesion", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            bUpdate = ImGui::SliderFloat("cohesion scale factor#boid", &m_fBoidCohesionScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+        }
 
-        if (ImGui::SliderFloat("boid scale", &m_fBoidScale, 0.01f, 0.05f, "%.3f"))
+        if (bUpdate)
         {
             for (const auto boid : m_vBoids)
             {
                 boid->FindModelComponent()->m_fModelScale = m_fBoidScale;
-            }
-        }
 
-        if (ImGui::CollapsingHeader("Boid Avoid", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            if (ImGui::SliderFloat("scale factor##boid avoid", &m_fBoidAvoidScaleFactor, 0.1f, 10.0f, "%.3f"))
-            {
-                for (const auto boid : m_vBoids)
-                {
-                    BrainComponent* pBrain = boid->FindBrainComponent();
-                    Behaviour* pBehaviour = pBrain->GetBehaviour(0);
-                    pBehaviour->m_fScaleFactor = m_fBoidAvoidScaleFactor;
-                }
-            }
+                PhysicsComponent* pPhysics = m_pTarget->FindPhysicsComponent();
+                pPhysics->m_fMass = m_fBoidMass;
+                pPhysics->m_fMaxForce = m_fBoidMaxForce;
+                pPhysics->m_fMaxVelocity = m_fBoidMaxVelocity;
 
-            if (ImGui::SliderFloat("ray length##boid avoid", &m_fBoidAvoidRayLength, 0.5f, 10.0f, "%.3f"))
-            {
-                for (const auto boid : m_vBoids)
-                {
-                    BrainComponent* pBrain = boid->FindBrainComponent();
-                    Behaviour* pBehaviour = pBrain->GetBehaviour(0);
-                    Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
-                    pAvoid->m_fRayLength = m_fBoidAvoidRayLength;
-                }
+                BrainComponent* pBrain = boid->FindBrainComponent();
+
+                Behaviour* pBehaviour = pBrain->GetBehaviour(0);
+                pBehaviour->m_fScaleFactor = m_fBoidAvoidScaleFactor;
+                Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
+                pAvoid->m_fRayLength = m_fBoidAvoidRayLength;
+
+                pBehaviour = pBrain->GetBehaviour(2);
+                pBehaviour->m_fScaleFactor = m_fBoidSeparationScaleFactor;
+
+                pBehaviour = pBrain->GetBehaviour(3);
+                pBehaviour->m_fScaleFactor = m_fBoidAlignmentScaleFactor;
+
+                pBehaviour = pBrain->GetBehaviour(4);
+                pBehaviour->m_fScaleFactor = m_fBoidCohesionScaleFactor;
             }
         }
     }
