@@ -569,14 +569,17 @@ void Scene::Gui()
         if (ImGui::CollapsingHeader("Separation", ImGuiTreeNodeFlags_DefaultOpen))
         {
             bUpdate = ImGui::SliderFloat("separation scale factor#boid", &m_fBoidSeparationScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("separation neighbour radius#boid", &m_fBoidSeparationNeighbourRadius, 0.0f, 10.0f, "%.3f") || bUpdate;
         }
         if (ImGui::CollapsingHeader("Alignment", ImGuiTreeNodeFlags_DefaultOpen))
         {
             bUpdate = ImGui::SliderFloat("alignment scale factor#boid", &m_fBoidAlignmentScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("alignment neighbour radius#boid", &m_fBoidAlignmentNeighbourRadius, 0.0f, 10.0f, "%.3f") || bUpdate;
         }
         if (ImGui::CollapsingHeader("Cohesion", ImGuiTreeNodeFlags_DefaultOpen))
         {
             bUpdate = ImGui::SliderFloat("cohesion scale factor#boid", &m_fBoidCohesionScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("cohesion neighbour radius#boid", &m_fBoidCohesionNeighbourRadius, 0.0f, 10.0f, "%.3f") || bUpdate;
         }
 
         if (bUpdate)
@@ -602,12 +605,15 @@ void Scene::Gui()
 
                 pBehaviour = pBrain->GetBehaviour(2);
                 pBehaviour->m_fScaleFactor = m_fBoidSeparationScaleFactor;
+                pBehaviour->m_fNeighbourRadius = m_fBoidSeparationNeighbourRadius;
 
                 pBehaviour = pBrain->GetBehaviour(3);
-                pBehaviour->m_fScaleFactor = m_fBoidAlignmentScaleFactor;
+                pBehaviour->m_fScaleFactor = m_fBoidAlignmentNeighbourRadius;
+                pBehaviour->m_fNeighbourRadius = m_fBoidAlignmentScaleFactor;
 
                 pBehaviour = pBrain->GetBehaviour(4);
                 pBehaviour->m_fScaleFactor = m_fBoidCohesionScaleFactor;
+                pBehaviour->m_fNeighbourRadius = m_fBoidCohesionNeighbourRadius;
             }
         }
     }
