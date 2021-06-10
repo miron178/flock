@@ -87,10 +87,21 @@ private:
 	int m_eBoidSteering = static_cast<int>(Steering::Pursue);
 
 	float m_fBoidArriveScaleFactor = 0.5f;
+	float m_fBoidArriveSpeed = 1.0f;
+
 	float m_fBoidFleeScaleFactor = 0.5f;
+	float m_fBoidFleeSpeed = 1.0f;
+
 	float m_fBoidPursueScaleFactor = 0.5f;
+	float m_fBoidPursueSpeed = 1.0f;
+
 	float m_fBoidSeekScaleFactor = 0.5f;
+	float m_fBoidSeekSpeed = 1.0f;
+
 	float m_fBoidWanderScaleFactor = 0.5f;
+	float m_fBoidWanderDistance = 1.0f;
+	float m_fBoidWanderRadius = 0.8f;
+	float m_fBoidWanderJitter = 0.4f;
 
 	float m_fBoidSeparationScaleFactor = 0.5f;
 	float m_fBoidSeparationNeighbourRadius = 1.0f;

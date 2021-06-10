@@ -535,9 +535,9 @@ void Scene::Gui()
             ImGui::SliderFloat("wander scale factor##target", &pBehaviour->m_fScaleFactor, 0.0f, 2.0f, "%.3f");
 
             Wander* pWander = reinterpret_cast<Wander*>(pBehaviour);
-            ImGui::SliderFloat("wander distance#target", &pWander->m_fDistance, 0.2f, 10.0f, "%.3f");
-            ImGui::SliderFloat("wander radius#target", &pWander->m_fRadius, 0.1f, pWander->m_fDistance - 0.1, "%.3f");
-            ImGui::SliderFloat("wander jitter#target", &pWander->m_fJitter, 0.0f, pWander->m_fRadius, "%.3f");
+            ImGui::SliderFloat("wander distance##target", &pWander->m_fDistance, 0.2f, 10.0f, "%.3f");
+            ImGui::SliderFloat("wander radius##target", &pWander->m_fRadius, 0.1f, pWander->m_fDistance - 0.1, "%.3f");
+            ImGui::SliderFloat("wander jitter##target", &pWander->m_fJitter, 0.0f, pWander->m_fRadius, "%.3f");
         }
     }
 
@@ -555,31 +555,66 @@ void Scene::Gui()
         }
         if (ImGui::CollapsingHeader("Avoid", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            bUpdate = ImGui::SliderFloat("avoid scale factor#boid", &m_fBoidAvoidScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
-            bUpdate = ImGui::SliderFloat("avoid ray length#boid", &m_fBoidAvoidRayLength, 0.5f, 10.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("avoid scale factor##boid", &m_fBoidAvoidScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("avoid ray length##boid", &m_fBoidAvoidRayLength, 0.5f, 10.0f, "%.3f") || bUpdate;
         }
 
         if (ImGui::CollapsingHeader("Steering", ImGuiTreeNodeFlags_DefaultOpen))
         {
             const char* pNames[static_cast<int>(Steering::COUNT)] = { "Arrive", "Flee", "Pursue", "Seek", "Wander" };
             const char* pName = pNames[m_eBoidSteering];
-            bUpdate = ImGui::SliderInt("steeing#boid", &m_eBoidSteering, 0, static_cast<int>(Steering::COUNT) - 1, pName) || bUpdate;
+            bUpdate = ImGui::SliderInt("steeing##boid", &m_eBoidSteering, 0, static_cast<int>(Steering::COUNT) - 1, pName) || bUpdate;
+            switch (static_cast<Steering>(m_eBoidSteering))
+            {
+            case Steering::Arrive:
+            {
+                bUpdate = ImGui::SliderFloat("arrive scale factor##boid", &m_fBoidArriveScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+                bUpdate = ImGui::SliderFloat("arrive speed##boid", &m_fBoidArriveSpeed, 0.1f, 5.0f, "%.1f") || bUpdate;
+                break;
+            }
+            case Steering::Flee:
+            {
+                bUpdate = ImGui::SliderFloat("flee scale factor##boid", &m_fBoidFleeScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+                bUpdate = ImGui::SliderFloat("flee speed##boid", &m_fBoidFleeSpeed, 0.1f, 5.0f, "%.1f") || bUpdate;
+                break;
+            }
+            case Steering::Seek:
+            {
+                bUpdate = ImGui::SliderFloat("seek scale factor##boid", &m_fBoidSeekScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+                bUpdate = ImGui::SliderFloat("seek speed##boid", &m_fBoidSeekSpeed, 0.1f, 5.0f, "%.1f") || bUpdate;
+                break;
+            }
+            case Steering::Pursue:
+            {
+                bUpdate = ImGui::SliderFloat("pursue scale factor##boid", &m_fBoidPursueScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+                bUpdate = ImGui::SliderFloat("pursue speed##boid", &m_fBoidPursueSpeed, 0.1f, 5.0f, "%.1f") || bUpdate;
+                break;
+            }
+            case Steering::Wander:
+            {
+                bUpdate = ImGui::SliderFloat("wander scale factor##boid", &m_fBoidWanderScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+                ImGui::SliderFloat("wander distance##boid", &m_fBoidWanderDistance, 0.2f, 10.0f, "%.3f") || bUpdate;
+                ImGui::SliderFloat("wander radius##boid", &m_fBoidWanderRadius, 0.1f, m_fBoidWanderDistance - 0.1, "%.3f") || bUpdate;
+                ImGui::SliderFloat("wander jitter##boid", &m_fBoidWanderJitter, 0.0f, m_fBoidWanderRadius, "%.3f") || bUpdate;
+                break;
+            }
+            }
         }
 
         if (ImGui::CollapsingHeader("Separation", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            bUpdate = ImGui::SliderFloat("separation scale factor#boid", &m_fBoidSeparationScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
-            bUpdate = ImGui::SliderFloat("separation neighbour radius#boid", &m_fBoidSeparationNeighbourRadius, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("separation scale factor##boid", &m_fBoidSeparationScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("separation neighbour radius##boid", &m_fBoidSeparationNeighbourRadius, 0.0f, 2.0f, "%.3f") || bUpdate;
         }
         if (ImGui::CollapsingHeader("Alignment", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            bUpdate = ImGui::SliderFloat("alignment scale factor#boid", &m_fBoidAlignmentScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
-            bUpdate = ImGui::SliderFloat("alignment neighbour radius#boid", &m_fBoidAlignmentNeighbourRadius, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("alignment scale factor##boid", &m_fBoidAlignmentScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("alignment neighbour radius##boid", &m_fBoidAlignmentNeighbourRadius, 0.0f, 2.0f, "%.3f") || bUpdate;
         }
         if (ImGui::CollapsingHeader("Cohesion", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            bUpdate = ImGui::SliderFloat("cohesion scale factor#boid", &m_fBoidCohesionScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
-            bUpdate = ImGui::SliderFloat("cohesion neighbour radius#boid", &m_fBoidCohesionNeighbourRadius, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("cohesion scale factor##boid", &m_fBoidCohesionScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("cohesion neighbour radius##boid", &m_fBoidCohesionNeighbourRadius, 0.0f, 2.0f, "%.3f") || bUpdate;
         }
 
         if (bUpdate)
@@ -602,6 +637,48 @@ void Scene::Gui()
                 pAvoid->m_fRayLength = m_fBoidAvoidRayLength;
 
                 UpdateBoidSteering(boid);
+                pBehaviour = pBrain->GetBehaviour(1);
+
+                switch (static_cast<Steering>(m_eBoidSteering))
+                {
+                case Steering::Arrive:
+                {
+                    Arrive* pArrive = reinterpret_cast<Arrive*>(pBehaviour);
+                    pArrive->m_fScaleFactor = m_fBoidArriveScaleFactor;
+                    pArrive->m_fSpeed = m_fBoidArriveSpeed;
+                    break;
+                }
+                case Steering::Flee:
+                {
+                    Flee* pFlee = reinterpret_cast<Flee*>(pBehaviour);
+                    pFlee->m_fScaleFactor = m_fBoidFleeScaleFactor;
+                    pFlee->m_fSpeed = m_fBoidFleeSpeed;
+                    break;
+                }
+                case Steering::Seek:
+                {
+                    Seek* pSeek = reinterpret_cast<Seek*>(pBehaviour);
+                    pSeek->m_fScaleFactor = m_fBoidSeekScaleFactor;
+                    pSeek->m_fSpeed = m_fBoidSeekSpeed;
+                    break;
+                }
+                case Steering::Pursue:
+                {
+                    Pursue* pPursue = reinterpret_cast<Pursue*>(pBehaviour);
+                    pPursue->m_fScaleFactor = m_fBoidPursueScaleFactor;
+                    pPursue->m_fSpeed = m_fBoidPursueSpeed;
+                    break;
+                }
+                case Steering::Wander:
+                {
+                    Wander* pWander = reinterpret_cast<Wander*>(pBehaviour);
+                    pWander->m_fScaleFactor = m_fBoidWanderScaleFactor;
+                    pWander->m_fDistance = m_fBoidWanderDistance;
+                    pWander->m_fRadius = m_fBoidWanderRadius;
+                    pWander->m_fJitter = m_fBoidWanderJitter;
+                    break;
+                }
+                }
 
                 pBehaviour = pBrain->GetBehaviour(2);
                 pBehaviour->m_fScaleFactor = m_fBoidSeparationScaleFactor;
