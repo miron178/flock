@@ -145,7 +145,7 @@ bool Scene::Initialise()
         pEntity->AddComponent(pTransformComponent);
         pModelComponent = new ModelComponent(pEntity);
         pModelComponent->SetModel(m_pContainmentModel);
-        pModelComponent->SetScale(0.04f);
+        pModelComponent->m_fModelScale = 0.04f;
         pEntity->AddComponent(pModelComponent);
         m_vAvoid.push_back(pEntity);
 
@@ -154,7 +154,7 @@ bool Scene::Initialise()
         pEntity->AddComponent(pTransformComponent);
         pModelComponent = new ModelComponent(pEntity);
         pModelComponent->SetModel(m_pAvoidModel);
-        pModelComponent->SetScale(0.004f);
+        pModelComponent->m_fModelScale =0.004f;
         pEntity->AddComponent(pModelComponent);
 
         m_vAvoid.push_back(pEntity);
@@ -175,7 +175,7 @@ bool Scene::Initialise()
         //model component
         ModelComponent* pModelComponent = new ModelComponent(m_pTarget);
         pModelComponent->SetModel(m_pLeaderModel);
-        pModelComponent->SetScale(0.02f);
+        pModelComponent->m_fModelScale = 0.02f;
         m_pTarget->AddComponent(pModelComponent);
 
         //brain component
@@ -214,7 +214,7 @@ bool Scene::Initialise()
         //model component
         ModelComponent* pModelComponent = new ModelComponent(pEntity);
         pModelComponent->SetModel(m_pBoidModel);
-        pModelComponent->SetScale(0.02f);
+        pModelComponent->m_fModelScale = 0.02f;
         pEntity->AddComponent(pModelComponent);
 
         //physics component
@@ -468,12 +468,14 @@ void Scene::Gui()
     if (ImGui::CollapsingHeader("Target", ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::Text("Tweak behaviour of the target boid");
+        ImGui::SliderFloat("target scale", &m_pTarget->FindModelComponent()->m_fModelScale, 0.01f, 0.05f, "%.3f");
         if (ImGui::CollapsingHeader("Physics", ImGuiTreeNodeFlags_DefaultOpen))
         {
             PhysicsComponent* pPhysics = m_pTarget->FindPhysicsComponent();
             ImGui::SliderFloat("mass", &pPhysics->m_fMass, 0.1f, 10.0f, "%.3f");
             ImGui::SliderFloat("max force", &pPhysics->m_fMaxForce, 1.0f, 20.0f, "%.1f");
             ImGui::SliderFloat("max velocity", &pPhysics->m_fMaxVelocity, 1.0f, 20.0f, "%.1f");
+    
         }
 
         BrainComponent* pBrain = m_pTarget->FindBrainComponent();
@@ -494,6 +496,12 @@ void Scene::Gui()
             ImGui::SliderFloat("radius", &pWander->m_fRadius, 0.1f, pWander->m_fDistance - 0.1, "%.3f");
             ImGui::SliderFloat("jitter", &pWander->m_fJitter, 0.0f, pWander->m_fRadius, "%.3f");
         }
+    }
+
+    if (ImGui::CollapsingHeader("Cube", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Text("Tweak behaviour of the avoid mesh");
+        ImGui::SliderFloat("cube scale", &m_vAvoid[1]->FindModelComponent()->m_fModelScale, 0.001f, 0.01f, "%.4f");
     }
 
     ImGui::Separator();

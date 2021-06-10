@@ -18,12 +18,12 @@ public:
     Model* GetModel() const { return m_pModelData; }
     void SetModel(Model* a_pNewModel) { m_pModelData  = a_pNewModel; }
 
-    void SetScale(float a_fNewScale){ m_fModelScale = a_fNewScale; }
     glm::mat4 GetModelMatrix() const;
+
+    float m_fModelScale;
 
 private:
     Model* m_pModelData;
-    float m_fModelScale;
 };
 
 #endif
