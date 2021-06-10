@@ -34,7 +34,9 @@ private:
 
 	int RandomNumberBetweenRange(int a_iLowerRange, int a_iUpperRange);
 	float RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange);
-	
+
+	void Gui();
+
 	GLFWwindow* window;
 	Camera* camera;
 	Model* m_pBoidModel;

@@ -38,6 +38,12 @@ target_include_directories(glad PUBLIC
 
 #IMGUI
 add_library(imgui STATIC
+	deps/imgui/imgui.cpp 
+	deps/imgui/imgui_demo.cpp 
+	deps/imgui/imgui_draw.cpp 
+	deps/imgui/imgui_tables.cpp 
+	deps/imgui/imgui_widgets.cpp
+
 	deps/imgui/backends/imgui_impl_glfw.cpp
 	deps/imgui/backends/imgui_impl_glfw.h
 	deps/imgui/backends/imgui_impl_opengl3.cpp
@@ -45,6 +51,7 @@ add_library(imgui STATIC
 )
 target_include_directories(imgui PUBLIC
 	deps/imgui
+	deps/imgui/backends
 )
 target_link_libraries(imgui PUBLIC glad glfw)
 
