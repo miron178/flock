@@ -509,7 +509,7 @@ void Scene::Gui()
     }
     ImGui::Separator();
 
-    if (ImGui::CollapsingHeader("Target", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::CollapsingHeader("Target"))
     {
         ImGui::Text("Tweak behaviour of the target boid");
         ImGui::SliderFloat("target scale", &m_pTarget->FindModelComponent()->m_fModelScale, 0.01f, 0.05f, "%.3f");
@@ -542,7 +542,7 @@ void Scene::Gui()
         }
     }
 
-    if (ImGui::CollapsingHeader("Flock", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::CollapsingHeader("Flock"))
     {
         ImGui::Text("Tweak behaviour of the flock");
         bool bUpdate = false;
@@ -612,9 +612,9 @@ void Scene::Gui()
         }
     }
 
-    if (ImGui::CollapsingHeader("Avoid", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::CollapsingHeader("Collisions"))
     {
-        ImGui::Text("Tweak behaviour of the avoid meshes");
+        ImGui::Text("Tweak behaviour of the collision meshes");
         ImGui::SliderFloat("containment scale", &m_vAvoid[0]->FindModelComponent()->m_fModelScale, 0.02f, 0.1f, "%.3f");
         ImGui::SliderFloat("cube scale", &m_vAvoid[1]->FindModelComponent()->m_fModelScale, 0.001f, 0.01f, "%.4f");
     }
