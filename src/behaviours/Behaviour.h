@@ -18,7 +18,6 @@ public:
 
 	//public params
 	float m_fSpeed = 1.0f;
-	float m_fMaxSpeed = 1.0f;
 	float m_fScaleFactor = 1.0f;
 	float m_fNeighbourRadius = 1.0f;
 
@@ -29,7 +28,6 @@ protected:
 	glm::vec3 TargetPos() const { return *m_pTarget; }
 
 	glm::vec3 Clamp(const glm::vec3& v3, float a_maxMagnitude) const;
-	glm::vec3 ClampVelocity(const glm::vec3& a_v3Velocity) const { return Clamp(a_v3Velocity, m_fMaxSpeed); }
 
 	glm::vec3 SphericalRand(float a_fRadius);
 

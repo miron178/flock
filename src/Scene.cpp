@@ -191,7 +191,6 @@ bool Scene::Initialise()
         pAvoid->m_fScaleFactor = 0.8f;
 
         Wander* pWander = new Wander(m_pTarget);
-        pWander->m_fMaxSpeed = 2;
         pWander->m_fSpeed = 2;
         pBrainComponent->AddBehaviour(1, pWander);
         pWander->m_fScaleFactor = 0.2f;

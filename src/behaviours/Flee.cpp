@@ -16,6 +16,6 @@ glm::vec3 Flee::Force()
 	{
 		v3AwayDir = glm::normalize(v3AwayDir);
 	}
-	glm::vec3 v3DesiredVelocity = ClampVelocity(v3AwayDir * m_fSpeed);
+	glm::vec3 v3DesiredVelocity = v3AwayDir * m_fSpeed;
 	return (v3DesiredVelocity - m_pPhysicsComponent->GetVelocity()) * m_fScaleFactor;
 }

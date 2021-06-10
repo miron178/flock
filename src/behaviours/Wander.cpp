@@ -4,7 +4,6 @@ Wander::Wander(const Entity* a_pAgent)
 	: Seek(a_pAgent, &m_v3Target)
 {
 	m_v3Direction = SphericalRand(m_fRadius);
-	m_fMaxSpeed = m_fDistance + m_fRadius;
 }
 
 
