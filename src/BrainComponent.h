@@ -24,10 +24,11 @@ public:
     void DeleteBehaviour(unsigned a_priority);
     void ClearBehaviours();
 
+    float m_fMaxForce = 1.0f;
+
 private:
     //Variable
     std::map<unsigned, Behaviour*> m_behaviours;
-    float m_fMaxForce = 1.0f;
 };
 
 #endif

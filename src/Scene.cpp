@@ -551,7 +551,7 @@ void Scene::Gui()
         {
             PhysicsComponent* pPhysics = m_pTarget->FindPhysicsComponent();
             bUpdate = ImGui::SliderFloat("boid mass", &m_fBoidMass, 0.1f, 10.0f, "%.3f") || bUpdate;
-            bUpdate = ImGui::SliderFloat("boid max force", &m_fBoidMaxForce, 1.0f, 20.0f, "%.1f") || bUpdate;
+            bUpdate = ImGui::SliderFloat("boid max force", &m_fBoidMaxForce, 0.1f, 10.0f, "%.1f") || bUpdate;
             bUpdate = ImGui::SliderFloat("boid max velocity", &m_fBoidMaxVelocity, 1.0f, 20.0f, "%.1f") || bUpdate;
         }
         if (ImGui::CollapsingHeader("Avoid", ImGuiTreeNodeFlags_DefaultOpen))
@@ -588,10 +588,11 @@ void Scene::Gui()
 
                 PhysicsComponent* pPhysics = m_pTarget->FindPhysicsComponent();
                 pPhysics->m_fMass = m_fBoidMass;
-                pPhysics->m_fMaxForce = m_fBoidMaxForce;
+                pPhysics->m_fMaxForce = m_fBoidMaxForce; //same as brain
                 pPhysics->m_fMaxVelocity = m_fBoidMaxVelocity;
 
                 BrainComponent* pBrain = boid->FindBrainComponent();
+                pBrain->m_fMaxForce = m_fBoidMaxForce; //same as physics
 
                 Behaviour* pBehaviour = pBrain->GetBehaviour(0);
                 pBehaviour->m_fScaleFactor = m_fBoidAvoidScaleFactor;
