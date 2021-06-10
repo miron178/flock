@@ -485,6 +485,7 @@ void Scene::Gui()
             ImGui::SliderFloat("scale factor##avoid", &pBehaviour->m_fScaleFactor, 0.1f, 10.0f, "%.3f");
 
             Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
+            ImGui::SliderFloat("ray length##avoid", &pAvoid->m_fRayLength, 0.5f, 10.0f, "%.3f");
         }
         if (ImGui::CollapsingHeader("Wander", ImGuiTreeNodeFlags_DefaultOpen))
         {
