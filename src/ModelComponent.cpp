@@ -3,7 +3,6 @@
 #include <learnopengl/shader.h>
 #include <learnopengl/model.h>
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "TransformComponent.h"
@@ -18,6 +17,14 @@ ModelComponent::ModelComponent(Entity* a_OwnerEntity)
 ModelComponent::~ModelComponent()
 {
 
+}
+
+glm::mat4 ModelComponent::GetModelMatrix() const
+{
+	TransformComponent* pTransFormComponent = m_pOwnerEntity->FindTransformComponent();
+	glm::mat4 m4ModelMatrix = pTransFormComponent->GetEntityMatrix();
+	m4ModelMatrix = glm::scale(m4ModelMatrix, glm::vec3(m_fModelScale, m_fModelScale, m_fModelScale));
+	return m4ModelMatrix;
 }
 
 void ModelComponent::Draw(Shader* a_pshader)
@@ -40,8 +47,6 @@ void ModelComponent::Draw(Shader* a_pshader)
 		return;
 	}
 
-	glm::mat4 m$ModelMatrix = pTransFormComponent->GetEntityMatrix();
-	m$ModelMatrix = glm::scale(m$ModelMatrix, glm::vec3(m_fModelScale, m_fModelScale, m_fModelScale));
-	a_pshader->setMat4("model", m$ModelMatrix);
+	a_pshader->setMat4("model", GetModelMatrix());
 	m_pModelData->Draw(*a_pshader);
 }

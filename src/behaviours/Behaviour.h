@@ -2,6 +2,7 @@
 #define BEHAVIOUR_H
 #include "TransformComponent.h"
 #include "PhysicsComponent.h"
+#include "ModelComponent.h"
 #include <glm/glm.hpp>
 #include <map>
 
@@ -10,7 +11,7 @@ class Entity;
 class Behaviour
 {
 public:
-	Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* pPhysicsComponent);
+	Behaviour(const Entity* a_pAgent, const glm::vec3* a_pTarget);
 	virtual ~Behaviour() = default;
 
 	virtual glm::vec3 Force() = 0;
@@ -22,8 +23,8 @@ public:
 	void SetScaleFactor(float a_fScaleFactor) { m_fScaleFactor = a_fScaleFactor; }
 
 protected:
-	glm::vec3 AgentPos() const { return m_pAgent->GetEntityMatrixRow(POSITION_VECTOR); }
-	glm::vec3 AgentForward() const { return m_pAgent->GetEntityMatrixRow(FORWARD_VECTOR); }
+	glm::vec3 AgentPos() const;
+	glm::vec3 AgentForward() const;
 	glm::vec3 AgentVelocity() const { return m_pPhysicsComponent->GetVelocity(); }
 	glm::vec3 TargetPos() const { return *m_pTarget; }
 
@@ -35,9 +36,12 @@ protected:
 	bool IsNeighbour(const Entity* a_pSelf, const Entity* a_pOther) const;
 
 protected:
-	const TransformComponent* m_pAgent;
-	const glm::vec3* m_pTarget;
+	const Entity* m_pAgent;
+	const TransformComponent* m_pTransformComponent;
 	const PhysicsComponent* m_pPhysicsComponent;
+	const ModelComponent* m_pModelComponent;
+
+	const glm::vec3* m_pTarget;
 
 	float m_fSpeed = 1.0f;
 	float m_fMaxSpeed = 1.0f;

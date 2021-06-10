@@ -25,6 +25,7 @@
 #include "Pursue.h"
 #include "Evade.h"
 #include "Wander.h"
+#include "Avoid.h"
 
 #include "Alignment.h"
 #include "Cohesion.h"
@@ -37,7 +38,7 @@
 // settings
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 800;
-const unsigned int NUM_OF_BOIDS = 100;
+const unsigned int NUM_OF_BOIDS = 50;
 
 Scene* Scene::s_pSceneInstanc = nullptr;
 
@@ -105,26 +106,38 @@ bool Scene::Initialise()
     m_pBoidModel = new Model("models/boid/boid.obj");
     m_pLeaderModel = new Model("models/leader/leader.obj");
     m_pContainmentModel = new Model("models/containment/containment.obj");
+    m_pAvoidModel = new Model("models/avoid/avoid.obj");
 
     //camera
-    camera = new Camera(glm::vec3(0.0f, 2.0f, 8.0f));
+    camera = new Camera(glm::vec3(0.0f, 2.0f, 4.0f));
 
     //seed randGen
     srand(static_cast<unsigned>(time(nullptr)));
 
-    //create containment entity
+    //create avoid entities
     {
-        m_pContainment = new Entity();
+        Entity* pEntity = new Entity();
+        TransformComponent* pTransformComponent;
+        ModelComponent* pModelComponent;
 
-        //transform Component
-        TransformComponent* pTransformComponent = new TransformComponent(m_pContainment);
-        m_pContainment->AddComponent(pTransformComponent);
-
-        //model component
-        ModelComponent* pModelComponent = new ModelComponent(m_pContainment);
+        pEntity = new Entity();
+        pTransformComponent = new TransformComponent(pEntity);
+        pEntity->AddComponent(pTransformComponent);
+        pModelComponent = new ModelComponent(pEntity);
         pModelComponent->SetModel(m_pContainmentModel);
-        pModelComponent->SetScale(0.08f);
-        m_pContainment->AddComponent(pModelComponent);
+        pModelComponent->SetScale(0.04f);
+        pEntity->AddComponent(pModelComponent);
+        m_vAvoid.push_back(pEntity);
+
+        pEntity = new Entity();
+        pTransformComponent = new TransformComponent(pEntity);
+        pEntity->AddComponent(pTransformComponent);
+        pModelComponent = new ModelComponent(pEntity);
+        pModelComponent->SetModel(m_pAvoidModel);
+        pModelComponent->SetScale(0.01f);
+        pEntity->AddComponent(pModelComponent);
+
+        m_vAvoid.push_back(pEntity);
     }
 
     //create target entity
@@ -133,9 +146,10 @@ bool Scene::Initialise()
 
         //transform Component
         TransformComponent* pTransformComponent = new TransformComponent(m_pTarget);
-        pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3(RandomFloatBetweenRange(0, 5),
-            0.0f,
-            RandomFloatBetweenRange(0, 5)));
+        pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3(
+            RandomFloatBetweenRange(-3, 3),
+            RandomFloatBetweenRange(-3, 3),
+            RandomFloatBetweenRange(-3, 3)));
         m_pTarget->AddComponent(pTransformComponent);
 
         //model component
@@ -152,10 +166,15 @@ bool Scene::Initialise()
         PhysicsComponent* pPhysicsComponent = new PhysicsComponent(m_pTarget);
         m_pTarget->AddComponent(pPhysicsComponent);
 
-        Wander* pWander = new Wander(pTransformComponent, pPhysicsComponent);
+        Wander* pWander = new Wander(m_pTarget);
         pWander->SetMaxSpeed(2);
         pWander->SetSpeed(2);
         pBrainComponent->AddBehaviour(0, pWander);
+        pWander->SetScaleFactor(0.4f);
+
+        Avoid* pAvoid = new Avoid(m_pTarget, m_vAvoid);
+        pBrainComponent->AddBehaviour(1, pAvoid);
+        pAvoid->SetScaleFactor(0.8f);
     }
 
     //create Entities
@@ -165,9 +184,10 @@ bool Scene::Initialise()
 
         //transform Component
         TransformComponent* pTransformComponent = new TransformComponent(pEntity);
-        pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3( RandomFloatBetweenRange(0, 5),
-                                                                            RandomFloatBetweenRange(0, 5),
-                                                                            RandomFloatBetweenRange(0, 5) ) );
+        pTransformComponent->SetEntityMatrixRow(POSITION_VECTOR, glm::vec3(
+            RandomFloatBetweenRange(-3, 3),
+            RandomFloatBetweenRange(-3, 3),
+            RandomFloatBetweenRange(-3, 3)));
         pEntity->AddComponent(pTransformComponent);
 
         //model component
@@ -188,9 +208,9 @@ bool Scene::Initialise()
         //pBrainComponent->AddBehaviour(0, pSeek);
         //pSeek->SetScaleFactor(0.5);
 
-        //Pursue* pPursue = new Pursue(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(0, pPursue);
-        //pPursue->SetScaleFactor(0.5);
+        Pursue* pPursue = new Pursue(pEntity, &m_v3Target);
+        pBrainComponent->AddBehaviour(0, pPursue);
+        pPursue->SetScaleFactor(0.5);
 
         //Wander* pWander = new Wander(pEntity->FindTransformComponent(), pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pWander);
@@ -199,21 +219,25 @@ bool Scene::Initialise()
         //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
         //pBrainComponent->AddBehaviour(0, pFlee);
 
-        Evade* pEvade = new Evade(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        pBrainComponent->AddBehaviour(0, pEvade);
-        pEvade->SetScaleFactor(0.5);
+        //Evade* pEvade = new Evade(pEntity, &m_v3Target);
+        //pBrainComponent->AddBehaviour(0, pEvade);
+        //pEvade->SetScaleFactor(0.5f);
 
         Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(1, pSeparation);
-        pSeparation->SetScaleFactor(0.5);
+        pSeparation->SetScaleFactor(0.5f);
 
         Alignment* pAlignment = new Alignment(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(2, pAlignment);
-        pAlignment->SetScaleFactor(0.1);
+        pAlignment->SetScaleFactor(0.1f);
 
         Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(3, pCohesion);
-        pCohesion->SetScaleFactor(0.2);
+        pCohesion->SetScaleFactor(0.2f);
+
+        Avoid* pAvoid = new Avoid(pEntity, m_vAvoid);
+        pBrainComponent->AddBehaviour(4, pAvoid);
+        pAvoid->SetScaleFactor(0.8f);
     }
 
     return true;
@@ -284,6 +308,7 @@ void Scene::Deinitialise()
     delete ourShader;
     delete m_pBoidModel;
     delete m_pLeaderModel;
+    delete m_pAvoidModel;
     delete m_pContainmentModel;
 
     std::map<const unsigned int, Entity*>::const_iterator xIter;

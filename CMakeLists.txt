@@ -70,6 +70,8 @@ add_executable(Flock
 	src/ModelComponent.h
 	src/PhysicsComponent.cpp
 	src/PhysicsComponent.h
+	src/Raycast.cpp
+	src/Raycast.h
 	src/Scene.cpp
 	src/Scene.h
 	src/TransformComponent.cpp
@@ -82,6 +84,8 @@ add_executable(Flock
 	# steering
 	src/behaviours/Arrive.cpp
 	src/behaviours/Arrive.h
+	src/behaviours/Avoid.cpp
+	src/behaviours/Avoid.h
 	src/behaviours/Evade.cpp
 	src/behaviours/Evade.h
 	src/behaviours/Flee.cpp

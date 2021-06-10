@@ -71,3 +71,8 @@ PhysicsComponent* Entity::FindPhysicsComponent() const
 {
 	return reinterpret_cast<PhysicsComponent*>(FindComponentOfType(COMPONENT_TYPE::PHYSICS));
 }
+
+ModelComponent* Entity::FindModelComponent() const
+{
+	return reinterpret_cast<ModelComponent*>(FindComponentOfType(COMPONENT_TYPE::MODEL));
+}

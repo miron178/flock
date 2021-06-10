@@ -12,7 +12,6 @@ public:
 private:
     virtual glm::vec3 Target();
 
-    const Entity* m_pSelf;
     const std::map<const unsigned int, Entity*>& m_xEntityMap;
 };
 

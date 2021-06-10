@@ -2,9 +2,8 @@
 #include "Entity.h"
 #include "PhysicsComponent.h"
 
-Cohesion::Cohesion(const Entity *a_pSelf, const std::map<const unsigned int, Entity*>& a_xEntityMap)
-	: Arrive(a_pSelf->FindTransformComponent(), nullptr, a_pSelf->FindPhysicsComponent())
-	, m_pSelf(a_pSelf)
+Cohesion::Cohesion(const Entity *a_pAgent, const std::map<const unsigned int, Entity*>& a_xEntityMap)
+	: Arrive(a_pAgent, nullptr)
 	, m_xEntityMap(a_xEntityMap)
 {}
 
@@ -17,7 +16,7 @@ glm::vec3 Cohesion::Target()
 	for (const auto xConstIter : m_xEntityMap)
 	{
 		const Entity* pNeighbour = xConstIter.second;
-		if (IsNeighbour(m_pSelf, pNeighbour))
+		if (IsNeighbour(m_pAgent, pNeighbour))
 		{
 			const TransformComponent* pNeighboutTransformComponent = pNeighbour->FindTransformComponent();
 			glm::vec3 v3NeighbourPos = pNeighboutTransformComponent->GetEntityMatrixRow(POSITION_VECTOR);

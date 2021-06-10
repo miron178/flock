@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include <glm/glm.hpp>
+#include <vector>
 
 //forward decloration
 struct GLFWwindow;
@@ -38,6 +39,7 @@ private:
 	Camera* camera;
 	Model* m_pBoidModel;
 	Model* m_pLeaderModel;
+	Model* m_pAvoidModel;
 	Model* m_pContainmentModel;
 	Shader* ourShader;
 
@@ -51,7 +53,8 @@ private:
 
 	glm::vec3 m_v3Target;
 	Entity* m_pTarget = nullptr;
-	Entity* m_pContainment = nullptr;
+
+	std::vector<const Entity*> m_vAvoid;
 };
 
 #endif // !SCENE_H

@@ -1,4 +1,4 @@
-# Blender MTL File: 'containment.blend'
+# Blender MTL File: 'avoid.blend'
 # Material Count: 1
 
 newmtl boid
@@ -10,4 +10,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd wall-texture-250x250.png
+map_Kd wildtextures_cracked-asphalt-seamless-texture-480x480.jpg

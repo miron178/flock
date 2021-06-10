@@ -1,8 +1,8 @@
 #include "Arrive.h"
 #include "PhysicsComponent.h"
 
-Arrive::Arrive(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent, float a_fRadius)
-	: Behaviour(a_pAgent, a_pTarget, a_pPhysicsComponent)
+Arrive::Arrive(const Entity* a_pAgent, const glm::vec3* a_pTarget, float a_fRadius)
+	: Behaviour(a_pAgent, a_pTarget)
 	, m_fRadius(a_fRadius)
 {}
 

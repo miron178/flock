@@ -6,7 +6,7 @@
 class Wander : public Seek
 {
 public:
-    Wander(const TransformComponent* a_pAgent, const PhysicsComponent* a_pPhysicsComponent);
+    Wander(const Entity* a_pAgent);
     virtual ~Wander() = default;
     virtual glm::vec3 Force() override;
 

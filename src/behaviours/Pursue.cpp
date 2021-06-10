@@ -1,8 +1,8 @@
 #include "Pursue.h"
 #include "PhysicsComponent.h"
 
-Pursue::Pursue(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent)
-	: Arrive(a_pAgent, a_pTarget, a_pPhysicsComponent, 0)
+Pursue::Pursue(const Entity* a_pAgent, const glm::vec3* a_pTarget)
+	: Arrive(a_pAgent, a_pTarget, 0)
 {}
 
 glm::vec3 Pursue::Target()

@@ -2,9 +2,8 @@
 #include "Entity.h"
 #include "PhysicsComponent.h"
 
-Alignment::Alignment(const Entity *a_pSelf, const std::map<const unsigned int, Entity*>& a_xEntityMap)
-	: Behaviour(a_pSelf->FindTransformComponent(), nullptr, a_pSelf->FindPhysicsComponent())
-	, m_pSelf(a_pSelf)
+Alignment::Alignment(const Entity *a_pAgent, const std::map<const unsigned int, Entity*>& a_xEntityMap)
+	: Behaviour(a_pAgent, nullptr)
 	, m_xEntityMap(a_xEntityMap)
 {}
 
@@ -18,7 +17,7 @@ glm::vec3 Alignment::Force()
 	for (const auto xConstIter : m_xEntityMap)
 	{
 		const Entity* pNeighbour = xConstIter.second;
-		if (IsNeighbour(m_pSelf, pNeighbour))
+		if (IsNeighbour(m_pAgent, pNeighbour))
 		{
 			const PhysicsComponent* pNeighboutPhysicsComponent = pNeighbour->FindPhysicsComponent();
 			v3Velocity += pNeighboutPhysicsComponent->GetVelocity();
@@ -32,4 +31,3 @@ glm::vec3 Alignment::Force()
 	}
 	return v3Force * m_fScaleFactor;
 }
-

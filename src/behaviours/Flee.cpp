@@ -1,8 +1,8 @@
 #include "Flee.h"
 #include "PhysicsComponent.h"
 
-Flee::Flee(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent)
-	: Behaviour(a_pAgent, a_pTarget, a_pPhysicsComponent)
+Flee::Flee(const Entity* a_pAgent, const glm::vec3* a_pTarget)
+	: Behaviour(a_pAgent, a_pTarget)
 {}
 
 glm::vec3 Flee::Force()

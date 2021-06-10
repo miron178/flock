@@ -6,7 +6,7 @@
 class Pursue : public Arrive
 {
 public:
-    Pursue(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent);
+    Pursue(const Entity* a_pAgent, const glm::vec3* a_pTarget);
     virtual ~Pursue() = default;
 
 private:

@@ -8,6 +8,7 @@ class Shader;
 
 #include "Component.h"
 class BrainComponent;
+class ModelComponent;
 class PhysicsComponent;
 class TransformComponent;
 
@@ -22,9 +23,10 @@ public:
 
 	void AddComponent(Component* a_pComponent);
 	Component* FindComponentOfType(COMPONENT_TYPE a_eComponentType) const;
-	TransformComponent* FindTransformComponent() const;
 	BrainComponent* FindBrainComponent() const;
 	PhysicsComponent* FindPhysicsComponent() const;
+	ModelComponent* FindModelComponent() const;
+	TransformComponent* FindTransformComponent() const;
 
 	static const std::map<const unsigned int, Entity*>& GetEntityMap() { return s_xEntityList; }
 	unsigned int GetEntityID() const { return m_uEntityID; }

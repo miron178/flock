@@ -6,7 +6,7 @@
 class Evade : public Arrive
 {
 public:
-    Evade(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent);
+    Evade(const Entity* a_pAgent, const glm::vec3* a_pTarget);
     virtual ~Evade() = default;
 
 private:

@@ -3,11 +3,26 @@
 
 //#define FLAT
 
-Behaviour::Behaviour(const TransformComponent* a_pAgent, const glm::vec3* a_pTarget, const PhysicsComponent* a_pPhysicsComponent)
+Behaviour::Behaviour(const Entity* a_pAgent, const glm::vec3* a_pTarget)
 	: m_pAgent(a_pAgent)
 	, m_pTarget(a_pTarget)
-	, m_pPhysicsComponent(a_pPhysicsComponent)
-{}
+{
+	m_pModelComponent = m_pAgent->FindModelComponent();
+	m_pPhysicsComponent = m_pAgent->FindPhysicsComponent();
+	m_pTransformComponent = m_pAgent->FindTransformComponent();
+}
+
+glm::vec3 Behaviour::AgentPos() const
+{
+	glm::vec3 v3Local = m_pTransformComponent->GetEntityMatrixRow(POSITION_VECTOR);
+	glm::vec3 v3World = m_pModelComponent->GetModelMatrix() * glm::vec4(v3Local, 1.0f);
+	return v3World;
+}
+
+glm::vec3 Behaviour::AgentForward() const
+{ 
+	return glm::normalize(m_pTransformComponent->GetEntityMatrixRow(FORWARD_VECTOR));
+}
 
 glm::vec3 Behaviour::Clamp(const glm::vec3& a_v3, float a_max) const
 {
