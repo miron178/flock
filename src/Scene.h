@@ -61,6 +61,11 @@ private:
 
 	bool m_bEscReleased = true;
 	bool m_bShowGui = true;
+
+	std::vector<const Entity*> m_vBoids;
+	float m_fBoidScale = 0.02f;
+	float m_fBoidAvoidScaleFactor = 0.08f;
+	float m_fBoidAvoidRayLength = 1.0f;
 };
 
 #endif // !SCENE_H

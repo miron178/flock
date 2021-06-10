@@ -214,7 +214,7 @@ bool Scene::Initialise()
         //model component
         ModelComponent* pModelComponent = new ModelComponent(pEntity);
         pModelComponent->SetModel(m_pBoidModel);
-        pModelComponent->m_fModelScale = 0.02f;
+        pModelComponent->m_fModelScale = m_fBoidScale;
         pEntity->AddComponent(pModelComponent);
 
         //physics component
@@ -260,6 +260,8 @@ bool Scene::Initialise()
         Cohesion* pCohesion = new Cohesion(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(4, pCohesion);
         pCohesion->SetScaleFactor(0.2f);
+
+        m_vBoids.push_back(pEntity);
     }
 
     return true;
@@ -507,6 +509,43 @@ void Scene::Gui()
             ImGui::SliderFloat("distance", &pWander->m_fDistance, 0.2f, 10.0f, "%.3f");
             ImGui::SliderFloat("radius", &pWander->m_fRadius, 0.1f, pWander->m_fDistance - 0.1, "%.3f");
             ImGui::SliderFloat("jitter", &pWander->m_fJitter, 0.0f, pWander->m_fRadius, "%.3f");
+        }
+    }
+
+    if (ImGui::CollapsingHeader("Flock", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Text("Tweak behaviour of the flock");
+
+        if (ImGui::SliderFloat("boid scale", &m_fBoidScale, 0.01f, 0.05f, "%.3f"))
+        {
+            for (const auto boid : m_vBoids)
+            {
+                boid->FindModelComponent()->m_fModelScale = m_fBoidScale;
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Boid Avoid", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (ImGui::SliderFloat("scale factor##boid avoid", &m_fBoidAvoidScaleFactor, 0.1f, 10.0f, "%.3f"))
+            {
+                for (const auto boid : m_vBoids)
+                {
+                    BrainComponent* pBrain = boid->FindBrainComponent();
+                    Behaviour* pBehaviour = pBrain->GetBehaviour(0);
+                    pBehaviour->m_fScaleFactor = m_fBoidAvoidScaleFactor;
+                }
+            }
+
+            if (ImGui::SliderFloat("ray length##boid avoid", &m_fBoidAvoidRayLength, 0.5f, 10.0f, "%.3f"))
+            {
+                for (const auto boid : m_vBoids)
+                {
+                    BrainComponent* pBrain = boid->FindBrainComponent();
+                    Behaviour* pBehaviour = pBrain->GetBehaviour(0);
+                    Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
+                    pAvoid->m_fRayLength = m_fBoidAvoidRayLength;
+                }
+            }
         }
     }
 
