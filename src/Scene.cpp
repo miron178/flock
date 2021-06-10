@@ -465,6 +465,17 @@ void Scene::Gui()
         return;
     }
 
+    ImGui::Text("Navigate with mouse and A W S D keys");
+    ImGui::Text("ESC to toggle UI");
+    ImGui::Separator();
+  
+    ImGui::Text("Exit the simulation");
+    if (ImGui::Button("Exit"))
+    {
+        glfwSetWindowShouldClose(window, true);
+    }
+    ImGui::Separator();
+
     if (ImGui::CollapsingHeader("Target", ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::Text("Tweak behaviour of the target boid");
@@ -504,13 +515,6 @@ void Scene::Gui()
         ImGui::Text("Tweak behaviour of the avoid meshes");
         ImGui::SliderFloat("containment scale", &m_vAvoid[0]->FindModelComponent()->m_fModelScale, 0.02f, 0.1f, "%.3f");
         ImGui::SliderFloat("cube scale", &m_vAvoid[1]->FindModelComponent()->m_fModelScale, 0.001f, 0.01f, "%.4f");
-    }
-
-    ImGui::Separator();
-    ImGui::Text("Exit the simulation");
-    if (ImGui::Button("Exit"))
-    {
-        glfwSetWindowShouldClose(window, true);
     }
 
     ImGui::End();
