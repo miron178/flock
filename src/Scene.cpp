@@ -230,24 +230,10 @@ bool Scene::Initialise()
         pBrainComponent->AddBehaviour(0, pAvoid);
         pAvoid->SetScaleFactor(0.8f);
 
-        Pursue* pPursue = new Pursue(pEntity, &m_v3Target);
-        pBrainComponent->AddBehaviour(1, pPursue);
-        pPursue->SetScaleFactor(0.5);
-
-        //Seek* pSeek = new Seek(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(1, pSeek);
-        //pSeek->SetScaleFactor(0.5);
-
-        //Wander* pWander = new Wander(pEntity->FindTransformComponent(), pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(1, pWander);
-        //pWander->SetMaxForce(0.1);
-
-        //Flee* pFlee = new Flee(pEntity->FindTransformComponent(), &m_v3Target, pPhysicsComponent);
-        //pBrainComponent->AddBehaviour(1, pFlee);
-
-        //Evade* pEvade = new Evade(pEntity, &m_v3Target);
-        //pBrainComponent->AddBehaviour(1, pEvade);
-        //pEvade->SetScaleFactor(0.5f);
+        UpdateBoidSteering(pEntity);
+        //Pursue* pPursue = new Pursue(pEntity, &m_v3Target);
+        //pBrainComponent->AddBehaviour(1, pPursue);
+        //pPursue->SetScaleFactor(0.5);
 
         Separation* pSeparation = new Separation(pEntity, Entity::GetEntityMap());
         pBrainComponent->AddBehaviour(2, pSeparation);
@@ -427,6 +413,54 @@ float Scene::RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange)
     return a_fLowerRange + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (a_fUpperRange - a_fLowerRange)));
 }
 
+void Scene::UpdateBoidSteering(Entity* a_pBoid)
+{
+    BrainComponent* pBrainComponent = a_pBoid->FindBrainComponent();
+
+    switch (static_cast<Steering>(m_eBoidSteering))
+    {
+    case Steering::Arrive:
+    {
+        Arrive* pArrive = new Arrive(a_pBoid, &m_v3Target);
+        Behaviour* pOld = pBrainComponent->AddBehaviour(1, pArrive);
+        pArrive->SetScaleFactor(m_fBoidArriveScaleFactor);
+        delete pOld;
+        break;
+    }
+    case Steering::Flee:
+    {
+        Flee* pFlee = new Flee(a_pBoid, &m_v3Target);
+        Behaviour* pOld = pBrainComponent->AddBehaviour(1, pFlee);
+        pFlee->SetScaleFactor(m_fBoidFleeScaleFactor);
+        delete pOld;
+        break;
+    }
+    case Steering::Seek:
+    {
+        Seek* pSeek = new Seek(a_pBoid, &m_v3Target);
+        Behaviour* pOld = pBrainComponent->AddBehaviour(1, pSeek);
+        pSeek->SetScaleFactor(m_fBoidSeekScaleFactor);
+        delete pOld;
+        break;
+    }
+    case Steering::Pursue:
+    {
+        Pursue* pPursue = new Pursue(a_pBoid, &m_v3Target);
+        Behaviour* pOld = pBrainComponent->AddBehaviour(1, pPursue);
+        pPursue->SetScaleFactor(m_fBoidPursueScaleFactor);
+        delete pOld;
+        break;
+    }
+    case Steering::Wander:
+    {
+        Wander* pWander = new Wander(a_pBoid);
+        Behaviour* pOld = pBrainComponent->AddBehaviour(1, pWander);
+        pWander->SetScaleFactor(m_fBoidWanderScaleFactor);
+        delete pOld;
+        break;
+    }
+    }
+}
 
 void Scene::ToggleGui()
 {
@@ -523,20 +557,28 @@ void Scene::Gui()
             bUpdate = ImGui::SliderFloat("boid max force", &m_fBoidMaxForce, 1.0f, 20.0f, "%.1f") || bUpdate;
             bUpdate = ImGui::SliderFloat("boid max velocity", &m_fBoidMaxVelocity, 1.0f, 20.0f, "%.1f") || bUpdate;
         }
-        if (ImGui::CollapsingHeader("avoid", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader("Avoid", ImGuiTreeNodeFlags_DefaultOpen))
         {
             bUpdate = ImGui::SliderFloat("avoid scale factor#boid", &m_fBoidAvoidScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
             bUpdate = ImGui::SliderFloat("avoid ray length#boid", &m_fBoidAvoidRayLength, 0.5f, 10.0f, "%.3f") || bUpdate;
         }
-        if (ImGui::CollapsingHeader("separation", ImGuiTreeNodeFlags_DefaultOpen))
+
+        if (ImGui::CollapsingHeader("Steering", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            const char* pNames[static_cast<int>(Steering::COUNT)] = { "Arrive", "Flee", "Pursue", "Seek", "Wander" };
+            const char* pName = pNames[m_eBoidSteering];
+            bUpdate = ImGui::SliderInt("steeing#boid", &m_eBoidSteering, 0, static_cast<int>(Steering::COUNT) - 1, pName) || bUpdate;
+        }
+
+        if (ImGui::CollapsingHeader("Separation", ImGuiTreeNodeFlags_DefaultOpen))
         {
             bUpdate = ImGui::SliderFloat("separation scale factor#boid", &m_fBoidSeparationScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
         }
-        if (ImGui::CollapsingHeader("alignment", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader("Alignment", ImGuiTreeNodeFlags_DefaultOpen))
         {
             bUpdate = ImGui::SliderFloat("alignment scale factor#boid", &m_fBoidAlignmentScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
         }
-        if (ImGui::CollapsingHeader("cohesion", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader("Cohesion", ImGuiTreeNodeFlags_DefaultOpen))
         {
             bUpdate = ImGui::SliderFloat("cohesion scale factor#boid", &m_fBoidCohesionScaleFactor, 0.0f, 2.0f, "%.3f") || bUpdate;
         }
@@ -558,6 +600,8 @@ void Scene::Gui()
                 pBehaviour->m_fScaleFactor = m_fBoidAvoidScaleFactor;
                 Avoid* pAvoid = reinterpret_cast<Avoid*>(pBehaviour);
                 pAvoid->m_fRayLength = m_fBoidAvoidRayLength;
+
+                UpdateBoidSteering(boid);
 
                 pBehaviour = pBrain->GetBehaviour(2);
                 pBehaviour->m_fScaleFactor = m_fBoidSeparationScaleFactor;

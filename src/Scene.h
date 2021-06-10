@@ -35,6 +35,18 @@ private:
 	int RandomNumberBetweenRange(int a_iLowerRange, int a_iUpperRange);
 	float RandomFloatBetweenRange(float a_fLowerRange, float a_fUpperRange);
 
+	enum class Steering
+	{
+		Arrive,
+		Flee,
+		Pursue,
+		Seek,
+		Wander,
+		COUNT
+	};
+
+	void UpdateBoidSteering(Entity* a_pBoid);
+
 	void ToggleGui();
 	void Gui();
 
@@ -62,7 +74,7 @@ private:
 	bool m_bEscReleased = true;
 	bool m_bShowGui = true;
 
-	std::vector<const Entity*> m_vBoids;
+	std::vector<Entity*> m_vBoids;
 	float m_fBoidScale = 0.02f;
 	
 	float m_fBoidMass = 1.0f;
@@ -72,9 +84,17 @@ private:
 	float m_fBoidAvoidScaleFactor = 0.08f;
 	float m_fBoidAvoidRayLength = 1.0f;
 
-	float m_fBoidSeparationScaleFactor = 0.05f;
-	float m_fBoidAlignmentScaleFactor = 0.05f;
-	float m_fBoidCohesionScaleFactor = 0.05f;
+	int m_eBoidSteering = static_cast<int>(Steering::Pursue);
+
+	float m_fBoidArriveScaleFactor = 0.5f;
+	float m_fBoidFleeScaleFactor = 0.5f;
+	float m_fBoidPursueScaleFactor = 0.5f;
+	float m_fBoidSeekScaleFactor = 0.5f;
+	float m_fBoidWanderScaleFactor = 0.5f;
+
+	float m_fBoidSeparationScaleFactor = 0.5f;
+	float m_fBoidAlignmentScaleFactor = 0.5f;
+	float m_fBoidCohesionScaleFactor = 0.5f;
 };
 
 #endif // !SCENE_H
